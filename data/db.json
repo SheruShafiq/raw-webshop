@@ -1,0 +1,108 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Wireless Headphones",
+      "description": "High-quality wireless headphones with noise cancellation",
+      "price": 99.99,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300",
+      "stock": 25,
+      "featured": true
+    },
+    {
+      "id": 2,
+      "name": "Smartphone",
+      "description": "Latest model smartphone with advanced camera features",
+      "price": 699.99,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300",
+      "stock": 15,
+      "featured": true
+    },
+    {
+      "id": 3,
+      "name": "Running Shoes",
+      "description": "Comfortable running shoes for daily workouts",
+      "price": 129.99,
+      "category": "Sports",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
+      "stock": 30,
+      "featured": false
+    },
+    {
+      "id": 4,
+      "name": "Coffee Maker",
+      "description": "Automatic coffee maker with programmable settings",
+      "price": 79.99,
+      "category": "Home",
+      "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300",
+      "stock": 20,
+      "featured": false
+    },
+    {
+      "id": 5,
+      "name": "Laptop Backpack",
+      "description": "Durable backpack designed for laptops and daily use",
+      "price": 49.99,
+      "category": "Accessories",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300",
+      "stock": 40,
+      "featured": false
+    },
+    {
+      "id": 6,
+      "name": "Gaming Mouse",
+      "description": "High-precision gaming mouse with customizable buttons",
+      "price": 59.99,
+      "category": "Electronics",
+      "image": "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300",
+      "stock": 35,
+      "featured": true
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@webshop.com",
+      "password": "admin123",
+      "role": "admin",
+      "name": "Admin User",
+      "createdAt": "2025-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "email": "user@example.com",
+      "password": "user123",
+      "role": "customer",
+      "name": "John Doe",
+      "address": "123 Main St, City, State 12345",
+      "phone": "+1-555-0123",
+      "createdAt": "2025-01-02T00:00:00.000Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "userId": 2,
+      "customer": {
+        "name": "John Doe",
+        "email": "user@example.com",
+        "address": "123 Main St, City, State 12345",
+        "phone": "+1-555-0123"
+      },
+      "items": [
+        {
+          "id": 1,
+          "name": "Wireless Headphones",
+          "price": 99.99,
+          "quantity": 1
+        }
+      ],
+      "total": 99.99,
+      "status": "completed",
+      "date": "2025-01-03T10:30:00.000Z"
+    }
+  ],
+  "carts": []
+}
