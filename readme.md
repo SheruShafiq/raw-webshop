@@ -46,5 +46,5 @@ Except the following regions:
 
 ## Installation:
 1) ```npm install```
-2) ```npm run dev``` Will start the server and the client
+2) ```npm run dev``` will start the server and the client
 3)  PROD: ```still needs to be done```
