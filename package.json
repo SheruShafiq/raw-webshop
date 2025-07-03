@@ -1,5 +1,31 @@
 {
+  "name": "webshop",
+  "version": "1.0.0",
+  "description": "A webshop built with HTML, CSS, JavaScript and JSON Server",
+  "main": "index.html",
+  "scripts": {
+    "start": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001 --host 0.0.0.0\"",
+    "dev": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001\"",
+    "build": "echo 'No build step required for static site'",
+    "json-server": "json-server --watch db.json --port 3001",
+    "serve": "serve -s . -l 3000"
+  },
   "dependencies": {
-    "json-server": "^1.0.0-beta.3"
-  }
+    "json-server": "^0.17.4",
+    "serve": "^14.2.1",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "keywords": [
+    "webshop",
+    "html",
+    "css",
+    "javascript",
+    "json-server",
+    "ecommerce"
+  ],
+  "author": "",
+  "license": "MIT"
 }

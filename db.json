@@ -1,0 +1,349 @@
+{
+  "roles": [
+    {
+      "id": 1,
+      "name": "User",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Admin",
+      "createdAt": "2023-10-01T12:00:00Z"
+    }
+  ],
+  "statuses": [
+    {
+      "id": 1,
+      "name": "Pending",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Paid",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Shipped",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Delivered",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Cancelled",
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 6,
+      "name": "Refunded",
+      "createdAt": "2023-10-01T12:00:00Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "FF7RMBU",
+      "displayName": "Cloud Strife",
+      "email": "cloud@ff7.com",
+      "password": "tifaHasMyLockedHart",
+      "roleId": 1,
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2025-07-03T08:00:00Z",
+      "deletedAt": null
+    }
+  ],
+  "userProfiles": [
+    {
+      "userId": "FF7RMBU",
+      "phone": "+77 777 777 777",
+      "dateOfBirth": "1986-08-11",
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2023-10-01T12:00:00Z"
+    }
+  ],
+  "addresses": [
+    {
+      "id": "addr_7th_heaven",
+      "userId": "usr_cloud",
+      "type": "shipping",
+      "street": "7th Heaven, Sector 7",
+      "city": "Midgar",
+      "zip": "777",
+      "country": "Gaia",
+      "isDefault": true,
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": "addr_shinra",
+      "userId": "FF7RMBU",
+      "type": "billing",
+      "street": "Shinra HQ, 1st Floor",
+      "city": "Midgar",
+      "zip": "700",
+      "country": "GA",
+      "isDefault": false,
+      "createdAt": "2025-06-20T09:30:00Z",
+      "updatedAt": null
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Weapons",
+      "parentId": null,
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Materia",
+      "parentId": null,
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Items",
+      "parentId": null,
+      "createdAt": "2023-10-01T12:00:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Swords",
+      "parentId": 1,
+      "createdAt": "2023-10-01T12:00:00Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "prod_buster_sword",
+      "name": "Buster Sword",
+      "description": "Iconic blade wielded by Cloud Strife.",
+      "categoryId": 4,
+      "tags": [
+        "weapon",
+        "melee",
+        "iconic"
+      ],
+      "variants": [
+        {
+          "id": "var_buster_steel",
+          "sku": "BS-STD-STEEL",
+          "name": "Standard Steel",
+          "priceCents": 200000,
+          "weightGrams": 7000,
+          "dimensionsCm": {
+            "l": 180,
+            "w": 30,
+            "h": 5
+          },
+          "image": "https://example.com/images/buster_sword_steel.jpg"
+        },
+        {
+          "id": "var_buster_mythril",
+          "sku": "BS-MYTHRIL",
+          "name": "Mythril Upgrade",
+          "priceCents": 230000,
+          "weightGrams": 5000,
+          "dimensionsCm": {
+            "l": 180,
+            "w": 30,
+            "h": 5
+          },
+          "image": "https://example.com/images/buster_sword_mythril.jpg"
+        }
+      ],
+      "images": [
+        "https://example.com/images/buster_sword_steel.jpg",
+        "https://example.com/images/buster_sword_mythril.jpg"
+      ],
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2025-07-02T16:10:00Z",
+      "deletedAt": null
+    },
+    {
+      "id": "prod_fire_materia",
+      "name": "Fire Materia",
+      "description": "Allows you to cast Fire spells.",
+      "categoryId": 2,
+      "tags": [
+        "magic",
+        "materia"
+      ],
+      "variants": [
+        {
+          "id": "var_fire_base",
+          "sku": "MAT-FIRE",
+          "name": "Base Orb",
+          "priceCents": 50000,
+          "weightGrams": 50,
+          "dimensionsCm": {
+            "diameter": 5
+          },
+          "image": "https://example.com/images/fire_materia.jpg"
+        }
+      ],
+      "images": [
+        "https://example.com/images/fire_materia.jpg"
+      ],
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2025-06-30T11:00:00Z",
+      "deletedAt": null
+    },
+    {
+      "id": "prod_potion",
+      "name": "Potion",
+      "description": "Restores 100 HP.",
+      "categoryId": 3,
+      "tags": [
+        "item",
+        "consumable",
+        "healing"
+      ],
+      "variants": [
+        {
+          "id": "var_potion_hi",
+          "sku": "ITM-POTION-100",
+          "name": "Hi Potion",
+          "priceCents": 15000,
+          "weightGrams": 200,
+          "dimensionsCm": {
+            "l": 5,
+            "w": 5,
+            "h": 12
+          },
+          "image": "https://example.com/images/potion.jpg"
+        }
+      ],
+      "images": [
+        "https://example.com/images/potion.jpg"
+      ],
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2025-06-28T09:20:00Z",
+      "deletedAt": null
+    }
+  ],
+  "inventory": [
+    {
+      "productId": "prod_buster_sword",
+      "variantId": "var_buster_steel",
+      "location": "MIDGAR_WH_MAIN",
+      "stock": 5,
+      "updatedAt": "2025-07-03T07:40:00Z"
+    },
+    {
+      "productId": "prod_buster_sword",
+      "variantId": "var_buster_mythril",
+      "location": "MIDGAR_WH_MAIN",
+      "stock": 2,
+      "updatedAt": "2025-07-03T07:40:00Z"
+    },
+    {
+      "productId": "prod_fire_materia",
+      "variantId": "var_fire_base",
+      "location": "MIDGAR_WH_MAIN",
+      "stock": 20,
+      "updatedAt": "2025-07-03T07:40:00Z"
+    },
+    {
+      "productId": "prod_potion",
+      "variantId": "var_potion_standard",
+      "location": "MIDGAR_WH_MAIN",
+      "stock": 50,
+      "updatedAt": "2025-07-03T07:40:00Z"
+    }
+  ],
+  "wishlists": [
+    {
+      "userId": "usr_cloud",
+      "productIds": [
+        "prod_fire_materia"
+      ],
+      "addedAt": "2025-07-01T14:22:00Z"
+    }
+  ],
+  "carts": [
+    {
+      "id": "cart_cloud",
+      "userId": "usr_cloud",
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_potion",
+          "variantId": "var_potion_standard",
+          "quantity": 3
+        }
+      ],
+      "createdAt": "2025-07-01T10:00:00Z",
+      "updatedAt": "2025-07-03T07:45:00Z",
+      "expiresAt": "2025-07-08T10:00:00Z"
+    },
+    {
+      "id": "cart_guest_01",
+      "userId": null,
+      "items": [
+        {
+          "productId": "prod_fire_materia",
+          "variantId": "var_fire_base",
+          "quantity": 2
+        }
+      ],
+      "createdAt": "2025-07-03T09:00:00Z",
+      "updatedAt": "2025-07-03T09:10:00Z",
+      "expiresAt": "2025-07-10T09:00:00Z"
+    }
+  ],
+  "promotions": [
+    {
+      "id": "promo_ff7_launch",
+      "name": "FF7 Launch Discount",
+      "type": "coupon",
+      "code": "FF7LAUNCH",
+      "discountType": "percentage",
+      "discountValue": 15,
+      "maxUses": 1000,
+      "maxUsesPerCustomer": 1,
+      "startsAt": "2023-09-25T00:00:00Z",
+      "endsAt": "2023-10-31T23:59:59Z",
+      "createdAt": "2023-09-20T12:00:00Z",
+      "updatedAt": null
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_2025_000123",
+      "orderNumber": "2025-000123",
+      "userId": "usr_cloud",
+      "statusId": 2,
+      "currency": "EUR",
+      "shippingAddressId": "addr_7th_heaven",
+      "billingAddressId": "addr_shinra",
+      "couponId": "promo_ff7_launch",
+      "totals": {
+        "subtotalCents": 200000,
+        "discountCents": 30000,
+        "taxCents": 20000,
+        "shippingCents": 2000,
+        "grandTotalCents": 192000
+      },
+      "Items": [
+        {
+          "orderId": "ord_2025_000123",
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "unitPriceCents": 200000,
+          "quantity": 1,
+          "subtotalCents": 200000
+        }
+      ],
+      "createdAt": "2023-10-01T12:00:00Z",
+      "updatedAt": "2023-10-02T09:15:00Z"
+    }
+  ]
+}
