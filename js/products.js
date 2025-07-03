@@ -46,7 +46,7 @@ class ProductManager {
      * Get default product data
      */
     async getDefaultProducts() {
-        return [
+        const fallback = [
             {
                 id: 1,
                 name: "Wireless Bluetooth Headphones",
@@ -128,6 +128,19 @@ class ProductManager {
                 featured: true
             }
         ];
+
+        try {
+            if (typeof API !== 'undefined') {
+                const apiProducts = await API.get('/products');
+                if (Array.isArray(apiProducts) && apiProducts.length > 0) {
+                    return apiProducts;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch products from API:', error);
+        }
+
+        return fallback;
     }
 
     /**
@@ -282,67 +295,84 @@ class ProductManager {
     /**
      * Add new product (admin function)
      */
-    addProduct(productData) {
-        const newProduct = {
-            id: this.getNextId(),
+    async addProduct(productData) {
+        const payload = {
             ...productData,
             stock: parseInt(productData.stock) || 0
         };
 
-        this.products.push(newProduct);
-        this.filteredProducts = [...this.products];
-        this.extractCategories();
-        this.saveProducts();
-        this.renderProducts();
-        this.renderCategories();
-
-        return newProduct;
-    }
-
-    /**
-     * Update existing product (admin function)
-     */
-    updateProduct(id, productData) {
-        const index = this.products.findIndex(product => product.id === parseInt(id));
-        
-        if (index !== -1) {
-            this.products[index] = {
-                ...this.products[index],
-                ...productData,
-                id: parseInt(id),
-                stock: parseInt(productData.stock) || 0
-            };
-
+        try {
+            const created = await API.post('/products', payload);
+            this.products.push(created);
             this.filteredProducts = [...this.products];
             this.extractCategories();
             this.saveProducts();
             this.renderProducts();
             this.renderCategories();
+            return created;
+        } catch (error) {
+            console.error('Error adding product:', error);
+            this.showError('Failed to add product');
+            return null;
+        }
+    }
 
-            return this.products[index];
+    /**
+     * Update existing product (admin function)
+     */
+    async updateProduct(id, productData) {
+        const index = this.products.findIndex(product => product.id === parseInt(id));
+
+        if (index === -1) {
+            return null;
         }
 
-        return null;
+        const payload = {
+            ...this.products[index],
+            ...productData,
+            id: parseInt(id),
+            stock: parseInt(productData.stock) || 0
+        };
+
+        try {
+            const updated = await API.put(`/products/${id}`, payload);
+            this.products[index] = updated;
+            this.filteredProducts = [...this.products];
+            this.extractCategories();
+            this.saveProducts();
+            this.renderProducts();
+            this.renderCategories();
+            return updated;
+        } catch (error) {
+            console.error('Error updating product:', error);
+            this.showError('Failed to update product');
+            return null;
+        }
     }
 
     /**
      * Delete product (admin function)
      */
-    deleteProduct(id) {
+    async deleteProduct(id) {
         const index = this.products.findIndex(product => product.id === parseInt(id));
-        
-        if (index !== -1) {
+        if (index === -1) {
+            return null;
+        }
+
+        try {
+            await API.delete(`/products/${id}`);
             const deletedProduct = this.products.splice(index, 1)[0];
             this.filteredProducts = [...this.products];
             this.extractCategories();
             this.saveProducts();
             this.renderProducts();
             this.renderCategories();
-
             return deletedProduct;
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            this.showError('Failed to delete product');
+            return null;
         }
-
-        return null;
     }
 
     /**
@@ -362,6 +392,9 @@ class ProductManager {
      */
     async resetProducts() {
         try {
+            if (typeof API !== 'undefined') {
+                await API.post('/reset');
+            }
             const defaultProducts = await this.getDefaultProducts();
             this.products = defaultProducts;
             this.filteredProducts = [...this.products];
