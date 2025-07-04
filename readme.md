@@ -48,3 +48,8 @@ Except the following regions:
 1) ```npm install```
 2) ```npm run dev``` Will start the server and the client
 3)  PROD: ```still needs to be done```
+
+## Notes
+The home page now loads products dynamically from the JSON Server
+endpoint (`/products`). A search box filters the list by product name
+or description as you type.
