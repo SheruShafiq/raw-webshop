@@ -48,3 +48,8 @@ Except the following regions:
 1) ```npm install```
 2) ```npm run dev``` Will start the server and the client
 3)  PROD: ```still needs to be done```
+
+## New Pages
+- **login.html**: Login form that authenticates against `/users` and stores the user ID in `localStorage`.
+- **register.html**: Registration form that posts to `/users` and assigns a random GIPHY image as the profile picture.
+- **profile.html**: Displays the logged-in user's details, addresses and orders.
