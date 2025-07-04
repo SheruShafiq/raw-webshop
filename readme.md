@@ -17,6 +17,7 @@ Except the following regions:
     3) Wishilist products
     4) Add products to cart
     5) Purchase products
+        - Checkout creates an order, updates stock and empties the cart
     6) Track purchases and view old purchases
 - An (admin) user can
     1) Add, remove, delete products
