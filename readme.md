@@ -48,3 +48,7 @@ Except the following regions:
 1) ```npm install```
 2) ```npm run dev``` Will start the server and the client
 3)  PROD: ```still needs to be done```
+## Development Notes:
+- Added shared header and footer across pages.
+- Navigation links cover Home, Cart, Wishlist, Profile and Admin.
+- Admin link appears when `localStorage.setItem('isAdmin', 'true')` is set.
