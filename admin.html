@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="admin.js" defer></script>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+
+    <section id="products">
+        <h2>Products</h2>
+        <table id="products-table">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Category ID</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>Add Product</h3>
+        <form id="add-product-form">
+            <input name="name" placeholder="Name" required>
+            <input name="categoryId" type="number" placeholder="Category ID" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </section>
+
+    <section id="categories">
+        <h2>Categories</h2>
+        <table id="categories-table">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>Add Category</h3>
+        <form id="add-category-form">
+            <input name="name" placeholder="Name" required>
+            <button type="submit">Add Category</button>
+        </form>
+    </section>
+
+    <section id="users">
+        <h2>Users</h2>
+        <table id="users-table">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Role ID</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>Add User</h3>
+        <form id="add-user-form">
+            <input name="displayName" placeholder="Display Name" required>
+            <input name="email" type="email" placeholder="Email" required>
+            <input name="password" type="password" placeholder="Password" required>
+            <input name="roleId" type="number" placeholder="Role ID" required>
+            <button type="submit">Add User</button>
+        </form>
+    </section>
+</body>
+</html>
