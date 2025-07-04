@@ -1,0 +1,12 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+}
+
+.cart-item, .wish-item {
+    margin-bottom: 0.5rem;
+}
+
+.cart-item span, .wish-item span {
+    margin-right: 0.5rem;
+}

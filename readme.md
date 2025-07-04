@@ -48,3 +48,7 @@ Except the following regions:
 1) ```npm install```
 2) ```npm run dev``` Will start the server and the client
 3)  PROD: ```still needs to be done```
+## Local Storage Demo
+Simple `cart.html` and `wishlist.html` pages now read data from your browser's `localStorage`.
+Items in the cart display their variant, quantity and total price. Quantities can be updated and
+items removed. Wishlist products can be moved directly to the cart.
