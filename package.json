@@ -4,10 +4,10 @@
   "description": "A webshop built with HTML, CSS, JavaScript and JSON Server",
   "main": "index.html",
   "scripts": {
-    "start": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001 --host 0.0.0.0\"",
-    "dev": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001\"",
+    "start": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001 --host 0.0.0.0 --static ./assets\"",
+    "dev": "concurrently \"serve -s . -l 3000\" \"json-server --watch db.json --port 3001 --static ./assets\"",
     "build": "echo 'No build step required for static site'",
-    "json-server": "json-server --watch db.json --port 3001",
+    "json-server": "json-server --watch db.json --port 3001 --static ./assets",
     "serve": "serve -s . -l 3000"
   },
   "dependencies": {

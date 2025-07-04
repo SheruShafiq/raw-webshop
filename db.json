@@ -127,6 +127,10 @@
         "melee",
         "iconic"
       ],
+      "images": [
+        "assets/products/busterSword/main.webp",
+        "assets/products/busterSword/mythril.webp"
+      ],
       "variants": [
         {
           "id": "var_buster_steel",
@@ -134,12 +138,7 @@
           "name": "Standard Steel",
           "priceCents": 200000,
           "weightGrams": 7000,
-          "dimensionsCm": {
-            "l": 180,
-            "w": 30,
-            "h": 5
-          },
-          "image": "https://example.com/images/buster_sword_steel.jpg"
+          "image": "assets/products/busterSword/main.webp"
         },
         {
           "id": "var_buster_mythril",
@@ -147,20 +146,11 @@
           "name": "Mythril Upgrade",
           "priceCents": 230000,
           "weightGrams": 5000,
-          "dimensionsCm": {
-            "l": 180,
-            "w": 30,
-            "h": 5
-          },
-          "image": "https://example.com/images/buster_sword_mythril.jpg"
+          "image": "assets/products/busterSword/mythril.webp"
         }
       ],
-      "images": [
-        "https://example.com/images/buster_sword_steel.jpg",
-        "https://example.com/images/buster_sword_mythril.jpg"
-      ],
       "createdAt": "2023-10-01T12:00:00Z",
-      "updatedAt": "2025-07-02T16:10:00Z",
+      "updatedAt": "2025-07-04T10:35:35.923Z",
       "deletedAt": null
     },
     {
@@ -222,6 +212,36 @@
       ],
       "createdAt": "2023-10-01T12:00:00Z",
       "updatedAt": "2025-06-28T09:20:00Z",
+      "deletedAt": null
+    },
+    {
+      "id": "prod_tranfarence_mdl",
+      "name": "Tranfarence Module",
+      "description": "Transference Module allows a character to use limit breaks much more frequently, greatly increasing their damage output (or in the case of Aerith, allowing her healing abilities to become active faster). It is useful on a character the player controls often, as AI-controlled party members do not expend ATB (or build it quickly) on their own. The player can couple it with Haste Haste and ATB Assist Materia ATB Assist Materia to build ATB faster, and thus use limits more frequently. Another good combo is the Refocus Materia Refocus Materia, giving more ATB slots and thus allowing ATB abilities to be used more quickly.",
+      "categoryId": 3,
+      "tags": [
+        "item",
+        "gear",
+        "limit"
+      ],
+      "images": [
+        "assets/products/transfarenceModule/mainT.png",
+        "assets/products/transfarenceModule/main.webp",
+        "assets/products/transfarenceModule/secondary.webp",
+        ""
+      ],
+      "variants": [
+        {
+          "id": "prod_tranfarence_mdl",
+          "sku": "BTD-RBIRTH",
+          "name": "Rebirth Variant",
+          "priceCents": 6000,
+          "weightGrams": 400,
+          "image": "assets/products/transfarenceModule/mainT.png,"
+        }
+      ],
+      "createdAt": "2025-07-04T10:46:14.774Z",
+      "updatedAt": "2025-07-04T10:46:14.774Z",
       "deletedAt": null
     }
   ],
