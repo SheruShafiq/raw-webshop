@@ -442,6 +442,30 @@
       ],
       "createdAt": "2025-07-07T14:53:07.698Z",
       "updatedAt": "2025-07-07T14:53:07.698Z"
+    },
+    {
+      "id": "ord_1751900561214",
+      "orderNumber": "2025-561214",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 2150,
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "unitPrice": 2000,
+          "quantity": 1,
+          "subtotal": 2000
+        },
+        {
+          "productId": "prod_potion",
+          "unitPrice": 150,
+          "quantity": 1,
+          "subtotal": 150
+        }
+      ],
+      "createdAt": "2025-07-07T15:02:41.214Z",
+      "updatedAt": "2025-07-07T15:02:41.214Z"
     }
   ]
 }
