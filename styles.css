@@ -1226,3 +1226,142 @@ form {
     background: #ff4040;
     box-shadow: 0 0 5px #ff4040;
 }
+
+/* FF7 Keyboard Navigation Styles */
+.ff7-keyboard-focus {
+    position: relative;
+    background: var(--ff7-selected-bg) !important;
+    border-color: var(--ff7-cursor-blue) !important;
+    box-shadow: 
+        inset 1px 1px 0 var(--ff7-window-border-light),
+        inset -1px -1px 0 var(--ff7-window-border-dark),
+        0 0 10px rgba(64, 128, 255, 0.6) !important;
+    z-index: 1;
+}
+
+.ff7-keyboard-focus::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border: 1px solid var(--ff7-cursor-blue);
+    border-radius: 2px;
+    animation: ff7-focus-pulse 1.5s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes ff7-focus-pulse {
+    0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 5px var(--ff7-cursor-blue);
+    }
+    50% { 
+        opacity: 0.7;
+        box-shadow: 0 0 15px var(--ff7-cursor-blue);
+    }
+}
+
+/* Enhanced button focus states */
+button.ff7-keyboard-focus,
+.btn.ff7-keyboard-focus {
+    color: var(--ff7-text-yellow) !important;
+    text-shadow: 0 0 5px var(--ff7-text-yellow) !important;
+    transform: scale(1.02);
+}
+
+/* Enhanced product card focus */
+.product-card.ff7-keyboard-focus {
+    transform: translateY(-2px) !important;
+    border-color: var(--ff7-cursor-blue) !important;
+}
+
+.product-card.ff7-keyboard-focus .product-name {
+    color: var(--ff7-cursor-blue) !important;
+    text-shadow: 0 0 5px var(--ff7-cursor-blue) !important;
+}
+
+/* Navigation focus */
+nav a.ff7-keyboard-focus {
+    background: var(--ff7-selected-bg) !important;
+    color: var(--ff7-text-yellow) !important;
+    text-shadow: 0 0 5px var(--ff7-text-yellow) !important;
+}
+
+nav a.ff7-keyboard-focus::before {
+    content: "▶" !important;
+    opacity: 1 !important;
+    animation: none !important;
+    color: var(--ff7-cursor-blue) !important;
+    text-shadow: 0 0 5px var(--ff7-cursor-blue) !important;
+}
+
+/* Input focus styles */
+input.ff7-keyboard-focus,
+textarea.ff7-keyboard-focus,
+select.ff7-keyboard-focus {
+    border-color: var(--ff7-cursor-blue) !important;
+    background: var(--ff7-selected-bg) !important;
+    color: var(--ff7-text-yellow) !important;
+}
+
+/* Cursor image styling */
+#ff7-cursor {
+    filter: drop-shadow(0 0 3px var(--ff7-cursor-blue));
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* Hide default focus outlines when using keyboard navigation */
+.ff7-keyboard-focus:focus {
+    outline: none !important;
+}
+
+/* Keyboard navigation instructions */
+.ff7-keyboard-help {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: var(--ff7-window-bg);
+    border: 1px solid var(--ff7-window-border-light);
+    color: var(--ff7-text-gray);
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    max-width: 200px;
+}
+
+.ff7-keyboard-help.visible {
+    opacity: 0.8;
+}
+
+.ff7-keyboard-help p {
+    margin: 0.2rem 0;
+    line-height: 1.2;
+}
+
+/* Audio settings */
+.ff7-audio-toggle {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: var(--ff7-window-bg);
+    border: 1px solid var(--ff7-window-border-light);
+    color: var(--ff7-text-white);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+    z-index: 9999;
+    border-radius: 0;
+    text-transform: uppercase;
+}
+
+.ff7-audio-toggle:hover {
+    background: var(--ff7-selected-bg);
+    border-color: var(--ff7-cursor-blue);
+}

@@ -24,7 +24,7 @@ function getPagePath(page) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
+    // Show FF7 loading screen
     showFF7LoadingScreen();
     
     await waitForAuth();
@@ -33,6 +33,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     await initializeCart();
     updateCartUI();
+    
+    
+    // Initialize audio toggle
+    initializeAudioToggle();
     
     const cartLink = document.getElementById('cart-link');
     if (cartLink) {
@@ -46,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-    
+    // Hide loading screen after everything is loaded
     setTimeout(() => {
         hideFF7LoadingScreen();
     }, 1500);
@@ -170,7 +174,13 @@ function setupProductSearch(products) {
     const searchInput = document.getElementById('product-search');
     if (!searchInput) return;
     
+    let typingTimeout;
+    
     searchInput.addEventListener('input', (e) => {
+        // Play typing sound (throttled)
+        clearTimeout(typingTimeout);
+        playFF7Sound('typing');
+        
         const searchTerm = e.target.value.toLowerCase();
         
         if (searchTerm === '') {
@@ -178,18 +188,26 @@ function setupProductSearch(products) {
             return;
         }
         
-        const filteredProducts = products.filter(product => 
-            product.name.toLowerCase().includes(searchTerm) ||
-            product.description.toLowerCase().includes(searchTerm) ||
-            product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-        );
-        
-        displayProducts(filteredProducts);
-        
-        if (filteredProducts.length === 0) {
-            document.getElementById('products-container').innerHTML = 
-                '<p>No items found matching your search.</p>';
-        }
+        // Debounce search
+        typingTimeout = setTimeout(() => {
+            const filteredProducts = products.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                product.description.toLowerCase().includes(searchTerm) ||
+                product.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+            );
+            
+            displayProducts(filteredProducts);
+            
+            if (filteredProducts.length === 0) {
+                document.getElementById('products-container').innerHTML = 
+                    '<div class="ff7-window" style="padding: 2rem; text-align: center;"><p>No items found matching your search.</p></div>';
+            }
+        }, 300);
+    });
+    
+    // Add focus/blur sounds
+    searchInput.addEventListener('focus', () => {
+        playFF7Sound('menu_select');
     });
 }
 
@@ -854,18 +872,67 @@ function showPageTransition(text = 'Loading...') {
     transition.innerHTML = `<div class="ff7-transition-text">${text}</div>`;
     transition.classList.add('active');
     
+    // Play transition sound
+    playFF7Sound('transition');
+    
     setTimeout(() => {
         transition.classList.remove('active');
     }, 800);
 }
 
+// FF7 Sound System with Real Audio Files
+const FF7_SOUNDS = {
+    menu_select: 'sfx/confirmation_positive.wav',
+    menu_cursor: 'sfx/deck_ui_navigation.wav', 
+    menu_cancel: 'sfx/confirmation_negative.wav',
+    item_get: 'sfx/deck_ui_achievement_toast.wav',
+    error: 'sfx/bumper_end.wav',
+    modal_open: 'sfx/deck_ui_show_modal.wav',
+    modal_close: 'sfx/deck_ui_hide_modal.wav',
+    typing: 'sfx/deck_ui_typing.wav',
+    transition: 'sfx/deck_ui_tab_transition_01.wav',
+    toggle_on: 'sfx/deck_ui_switch_toggle_on.wav',
+    toggle_off: 'sfx/deck_ui_switch_toggle_off.wav'
+};
 
-function playFF7Sound(soundType) {
-    
-    
-    console.log(`Playing FF7 sound: ${soundType}`);
-    
-    
+let audioContext = null;
+let soundVolume = 0.3; // Default volume
+
+function initAudioContext() {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return audioContext;
+}
+
+async function playFF7Sound(soundType) {
+    try {
+        const soundPath = FF7_SOUNDS[soundType];
+        if (!soundPath) {
+            console.warn(`Unknown sound type: ${soundType}`);
+            return;
+        }
+        
+        // Create audio element for simpler implementation
+        const audio = new Audio(soundPath);
+        audio.volume = soundVolume;
+        
+        // Handle browser autoplay policy
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Audio autoplay prevented:", error);
+                // Show visual feedback if audio fails
+                showSoundVisualFeedback(soundType);
+            });
+        }
+    } catch (error) {
+        console.warn("Error playing sound:", error);
+        showSoundVisualFeedback(soundType);
+    }
+}
+
+function showSoundVisualFeedback(soundType) {
     const soundIndicator = document.createElement('div');
     soundIndicator.style.position = 'fixed';
     soundIndicator.style.top = '10px';
@@ -876,12 +943,205 @@ function playFF7Sound(soundType) {
     soundIndicator.style.fontSize = '10px';
     soundIndicator.style.borderRadius = '3px';
     soundIndicator.style.zIndex = '10000';
+    soundIndicator.style.opacity = '0.8';
     soundIndicator.textContent = `♪ ${soundType}`;
     document.body.appendChild(soundIndicator);
     
     setTimeout(() => {
         soundIndicator.remove();
-    }, 500);
+    }, 800);
+}
+
+// Initialize audio on first user interaction
+document.addEventListener('click', () => {
+    initAudioContext();
+}, { once: true });
+
+// Make sound function globally available
+window.playFF7Sound = playFF7Sound;
+
+// Keyboard Navigation System
+let currentFocusIndex = 0;
+let isKeyboardMode = false;
+let focusableElements = [];
+
+function updateFocusableElements() {
+    focusableElements = Array.from(document.querySelectorAll(`
+        button:not([disabled]), 
+        input:not([disabled]), 
+        select:not([disabled]), 
+        textarea:not([disabled]), 
+        a[href],
+        .product-card,
+        nav a,
+        [tabindex]:not([tabindex="-1"])
+    `)).filter(el => {
+        // Filter out hidden elements
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden' && el.offsetParent !== null;
+    });
+}
+
+function showFF7Cursor() {
+    let cursor = document.getElementById('ff7-cursor');
+    if (!cursor) {
+        cursor = document.createElement('img');
+        cursor.id = 'ff7-cursor';
+        cursor.src = 'assets/ui/ffviicursor.png';
+        cursor.style.position = 'fixed';
+        cursor.style.width = '20px';
+        cursor.style.height = '20px';
+        cursor.style.pointerEvents = 'none';
+        cursor.style.zIndex = '10001';
+        cursor.style.transition = 'all 0.1s ease';
+        cursor.style.display = 'none';
+        document.body.appendChild(cursor);
+    }
+    return cursor;
+}
+
+function updateCursorPosition() {
+    if (!isKeyboardMode || currentFocusIndex >= focusableElements.length) return;
+    
+    const cursor = showFF7Cursor();
+    const focusedElement = focusableElements[currentFocusIndex];
+    
+    if (focusedElement) {
+        const rect = focusedElement.getBoundingClientRect();
+        cursor.style.left = (rect.left - 25) + 'px';
+        cursor.style.top = (rect.top + rect.height / 2 - 10) + 'px';
+        cursor.style.display = 'block';
+        
+        // Add focus styling
+        focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
+        focusedElement.classList.add('ff7-keyboard-focus');
+        
+        // Scroll into view if needed
+        focusedElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest',
+            inline: 'nearest'
+        });
+    }
+}
+
+function hideFF7Cursor() {
+    const cursor = document.getElementById('ff7-cursor');
+    if (cursor) {
+        cursor.style.display = 'none';
+    }
+    // Remove all focus styling
+    focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
+    isKeyboardMode = false;
+}
+
+// Keyboard Event Handlers
+document.addEventListener('keydown', (e) => {
+    // Enable keyboard mode on arrow key press
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+        
+        if (!isKeyboardMode) {
+            isKeyboardMode = true;
+            updateFocusableElements();
+            if (focusableElements.length > 0) {
+                currentFocusIndex = 0;
+                playFF7Sound('menu_cursor');
+            }
+        }
+        
+        if (focusableElements.length === 0) return;
+        
+        switch (e.key) {
+            case 'ArrowDown':
+            case 'ArrowRight':
+                currentFocusIndex = (currentFocusIndex + 1) % focusableElements.length;
+                playFF7Sound('menu_cursor');
+                break;
+            case 'ArrowUp':
+            case 'ArrowLeft':
+                currentFocusIndex = currentFocusIndex === 0 ? 
+                    focusableElements.length - 1 : currentFocusIndex - 1;
+                playFF7Sound('menu_cursor');
+                break;
+        }
+        
+        updateCursorPosition();
+    }
+    
+    // Handle Enter/Space for activation
+    if ((e.key === 'Enter' || e.key === ' ') && isKeyboardMode && focusableElements[currentFocusIndex]) {
+        e.preventDefault();
+        const element = focusableElements[currentFocusIndex];
+        
+        if (element.tagName === 'BUTTON' || element.tagName === 'A') {
+            playFF7Sound('menu_select');
+            element.click();
+        } else if (element.classList.contains('product-card')) {
+            playFF7Sound('menu_select');
+            const viewBtn = element.querySelector('.view-details-btn');
+            if (viewBtn) viewBtn.click();
+        } else {
+            element.focus();
+            playFF7Sound('menu_select');
+        }
+    }
+    
+    // Handle Escape to cancel
+    if (e.key === 'Escape' && isKeyboardMode) {
+        playFF7Sound('menu_cancel');
+        hideFF7Cursor();
+    }
+});
+
+// Disable keyboard mode on mouse interaction
+document.addEventListener('mousemove', () => {
+    if (isKeyboardMode) {
+        hideFF7Cursor();
+    }
+});
+
+// Update focusable elements when DOM changes
+const observer = new MutationObserver(() => {
+    if (isKeyboardMode) {
+        updateFocusableElements();
+        updateCursorPosition();
+    }
+});
+
+observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style', 'class', 'disabled']
+});
+
+
+
+// Initialize audio toggle
+function initializeAudioToggle() {
+    const audioToggle = document.createElement('button');
+    audioToggle.className = 'ff7-audio-toggle';
+    audioToggle.id = 'ff7-audio-toggle';
+    audioToggle.textContent = `♪ ${soundVolume > 0 ? 'ON' : 'OFF'}`;
+    audioToggle.title = 'Toggle sound effects';
+    document.body.appendChild(audioToggle);
+    
+    audioToggle.addEventListener('click', () => {
+        soundVolume = soundVolume > 0 ? 0 : 0.3;
+        audioToggle.textContent = `♪ ${soundVolume > 0 ? 'ON' : 'OFF'}`;
+        playFF7Sound('toggle_on');
+        
+        // Save preference
+        localStorage.setItem('ff7_sound_enabled', soundVolume > 0);
+    });
+    
+    // Load saved preference
+    const savedSoundPreference = localStorage.getItem('ff7_sound_enabled');
+    if (savedSoundPreference === 'false') {
+        soundVolume = 0;
+        audioToggle.textContent = '♪ OFF';
+    }
 }
 
 

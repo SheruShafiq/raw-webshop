@@ -29,38 +29,57 @@ function initializeAuth() {
 }
 
 function setupAuthEventListeners() {
-    
+    // Login form
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
+        
+        // Add sound effects to form inputs
+        const inputs = loginForm.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                if (window.playFF7Sound) window.playFF7Sound('menu_cursor');
+            });
+        });
     }
     
-    
+    // Register form
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
+        
+        // Add sound effects to form inputs
+        const inputs = registerForm.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                if (window.playFF7Sound) window.playFF7Sound('menu_cursor');
+            });
+        });
     }
     
-    
+    // Logout button
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
     
-    
+    // Navigation event handlers
     document.addEventListener('click', (e) => {
         if (e.target.id === 'profile-link') {
             e.preventDefault();
+            if (window.playFF7Sound) window.playFF7Sound('menu_select');
             window.location.href = getPagePath('profile.html');
         }
         
         if (e.target.id === 'admin-link') {
             e.preventDefault();
+            if (window.playFF7Sound) window.playFF7Sound('menu_select');
             window.location.href = getPagePath('admin.html');
         }
         
         if (e.target.id === 'login-link') {
             e.preventDefault();
+            if (window.playFF7Sound) window.playFF7Sound('menu_select');
             window.location.href = getPagePath('login.html');
         }
     });
@@ -223,6 +242,7 @@ function showLoginForm() {
     const registerForm = document.getElementById('register-form');
     
     if (loginForm && registerForm) {
+        if (window.playFF7Sound) window.playFF7Sound('modal_close');
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
         clearAuthMessage();
@@ -234,6 +254,7 @@ function showRegisterForm() {
     const registerForm = document.getElementById('register-form');
     
     if (loginForm && registerForm) {
+        if (window.playFF7Sound) window.playFF7Sound('modal_open');
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
         clearAuthMessage();
