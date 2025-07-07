@@ -155,7 +155,7 @@
       "deletedAt": null
     },
     {
-     "id": "prod_transference_mdl",
+      "id": "prod_transference_mdl",
       "name": "Transference Module",
       "description": "Transference Module allows a character to use limit breaks much more frequently, greatly increasing their damage output (or in the case of Aerith, allowing her healing abilities to become active faster). It is useful on a character the player controls often, as AI-controlled party members do not expend ATB (or build it quickly) on their own. The player can couple it with Haste Haste and ATB Assist Materia ATB Assist Materia to build ATB faster, and thus use limits more frequently. Another good combo is the Refocus Materia Refocus Materia, giving more ATB slots and thus allowing ATB abilities to be used more quickly.",
       "categoryId": 3,
@@ -166,10 +166,12 @@
         "limit"
       ],
       "images": [
-        "assets/products/transfarenceModule/mainT.png"
+        "assets/products/transfarenceModule/mainT.png",
+        "assets/products/transfarenceModule/main.webp",
+        "assets/products/transfarenceModule/secondary.webp"
       ],
       "createdAt": "2025-07-04T10:46:14.774Z",
-      "updatedAt": "2025-07-04T10:46:14.774Z",
+      "updatedAt": "2025-07-07T13:14:55.684Z",
       "deletedAt": null
     }
   ],
@@ -329,7 +331,7 @@
           "subtotal": 2000
         },
         {
-         "productId": "prod_transference_mdl",
+          "productId": "prod_transference_mdl",
           "unitPrice": 60,
           "quantity": 1,
           "subtotal": 60

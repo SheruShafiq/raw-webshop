@@ -25,7 +25,6 @@ function getPagePath(page) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     
-    showFF7LoadingScreen();
     
     await waitForAuth();
     
@@ -50,10 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-    
-    setTimeout(() => {
-        hideFF7LoadingScreen();
-    }, 1500);
+ 
     
     if (currentPage.includes('product.html') || currentPage.endsWith('/product.html')) {
         loadProductDetail();
@@ -824,41 +820,7 @@ function showMessage(message, type = 'info') {
 }
 
 
-function showFF7LoadingScreen() {
-    const loadingScreen = document.createElement('div');
-    loadingScreen.id = 'ff7-loading-screen';
-    loadingScreen.className = 'ff7-loading-screen';
-    loadingScreen.innerHTML = `
-        <div class="ff7-loading-logo">WALL MARKET</div>
-        <div class="ff7-loading-bar">
-            <div class="ff7-loading-fill" id="ff7-loading-fill"></div>
-        </div>
-        <div class="ff7-loading-text">Initializing...</div>
-    `;
-    document.body.appendChild(loadingScreen);
-    
-    
-    let progress = 0;
-    const loadingFill = document.getElementById('ff7-loading-fill');
-    const loadingInterval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(loadingInterval);
-        }
-        loadingFill.style.width = progress + '%';
-    }, 100);
-}
 
-function hideFF7LoadingScreen() {
-    const loadingScreen = document.getElementById('ff7-loading-screen');
-    if (loadingScreen) {
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => {
-            loadingScreen.remove();
-        }, 300);
-    }
-}
 
 function showPageTransition(text = 'Loading...') {
     let transition = document.getElementById('ff7-page-transition');
@@ -962,7 +924,6 @@ window.playFF7Sound = playFF7Sound;
 
 
 let currentFocusIndex = 0;
-let isKeyboardMode = false;
 let focusableElements = [];
 
 function updateFocusableElements() {
@@ -1000,121 +961,18 @@ function showFF7Cursor() {
     return cursor;
 }
 
-function updateCursorPosition() {
-    if (!isKeyboardMode || currentFocusIndex >= focusableElements.length) return;
-    
-    const cursor = showFF7Cursor();
-    const focusedElement = focusableElements[currentFocusIndex];
-    
-    if (focusedElement) {
-        const rect = focusedElement.getBoundingClientRect();
-        cursor.style.left = (rect.left - 25) + 'px';
-        cursor.style.top = (rect.top + rect.height / 2 - 10) + 'px';
-        cursor.style.display = 'block';
-        
-        
-        focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
-        focusedElement.classList.add('ff7-keyboard-focus');
-        
-        
-        focusedElement.scrollIntoView({ 
-            behavior: 'smooth', 
-            block: 'nearest',
-            inline: 'nearest'
-        });
-    }
-}
-
-function hideFF7Cursor() {
-    const cursor = document.getElementById('ff7-cursor');
-    if (cursor) {
-        cursor.style.display = 'none';
-    }
-    
-    focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
-    isKeyboardMode = false;
-}
 
 
-document.addEventListener('keydown', (e) => {
-    
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-        e.preventDefault();
-        
-        if (!isKeyboardMode) {
-            isKeyboardMode = true;
-            updateFocusableElements();
-            if (focusableElements.length > 0) {
-                currentFocusIndex = 0;
-                playFF7Sound('menu_cursor');
-            }
-        }
-        
-        if (focusableElements.length === 0) return;
-        
-        switch (e.key) {
-            case 'ArrowDown':
-            case 'ArrowRight':
-                currentFocusIndex = (currentFocusIndex + 1) % focusableElements.length;
-                playFF7Sound('menu_cursor');
-                break;
-            case 'ArrowUp':
-            case 'ArrowLeft':
-                currentFocusIndex = currentFocusIndex === 0 ? 
-                    focusableElements.length - 1 : currentFocusIndex - 1;
-                playFF7Sound('menu_cursor');
-                break;
-        }
-        
-        updateCursorPosition();
-    }
-    
-    
-    if ((e.key === 'Enter' || e.key === ' ') && isKeyboardMode && focusableElements[currentFocusIndex]) {
-        e.preventDefault();
-        const element = focusableElements[currentFocusIndex];
-        
-        if (element.tagName === 'BUTTON' || element.tagName === 'A') {
-            playFF7Sound('menu_select');
-            element.click();
-        } else if (element.classList.contains('product-card')) {
-            playFF7Sound('menu_select');
-            const viewBtn = element.querySelector('.view-details-btn');
-            if (viewBtn) viewBtn.click();
-        } else {
-            element.focus();
-            playFF7Sound('menu_select');
-        }
-    }
-    
-    
-    if (e.key === 'Escape' && isKeyboardMode) {
-        playFF7Sound('menu_cancel');
-        hideFF7Cursor();
-    }
-});
 
 
-document.addEventListener('mousemove', () => {
-    if (isKeyboardMode) {
-        hideFF7Cursor();
-    }
-});
 
 
-const observer = new MutationObserver(() => {
-    if (isKeyboardMode) {
-        updateFocusableElements();
-        updateCursorPosition();
-    }
-});
 
-observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    attributeFilter: ['style', 'class', 'disabled']
-});
+
+
+
+
+
 
 
 
