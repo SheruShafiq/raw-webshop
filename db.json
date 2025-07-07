@@ -211,21 +211,12 @@
       "expiresAt": "2025-07-10T09:00:00Z"
     },
     {
-      "id": "cart_FF7RMBUXXXX_1751890508209",
-      "userId": "FF7RMBUXXXX",
-      "items": [
-        {
-          "productId": "prod_fire_materia",
-          "quantity": 1
-        },
-        {
-          "productId": "prod_potion",
-          "quantity": 1
-        }
-      ],
-      "createdAt": "2025-07-07T12:15:08.209Z",
-      "updatedAt": "2025-07-07T12:33:17.155Z",
-      "expiresAt": "2025-07-14T12:15:08.209Z"
+      "id": "test_cart_456",
+      "expiresAt": "2025-07-14T16:43:33.615Z",
+      "createdAt": "2025-07-07T16:43:33.615Z",
+      "updatedAt": "2025-07-07T16:43:33.615Z",
+      "userId": "test_user_2",
+      "items": []
     }
   ],
   "orders": [
@@ -361,6 +352,30 @@
       ],
       "createdAt": "2025-07-07T13:30:55.352Z",
       "updatedAt": "2025-07-07T13:30:55.352Z"
+    },
+    {
+      "id": "ord_1751899489939",
+      "orderNumber": "2025-489939",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 650,
+      "items": [
+        {
+          "productId": "prod_fire_materia",
+          "unitPrice": 500,
+          "quantity": 1,
+          "subtotal": 500
+        },
+        {
+          "productId": "prod_potion",
+          "unitPrice": 150,
+          "quantity": 1,
+          "subtotal": 150
+        }
+      ],
+      "createdAt": "2025-07-07T14:44:49.939Z",
+      "updatedAt": "2025-07-07T14:44:49.939Z"
     }
   ]
 }
