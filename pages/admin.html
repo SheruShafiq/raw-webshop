@@ -19,7 +19,6 @@
             <a href="#" id="categories-tab" class="admin-tab">Categories</a>
             <a href="#" id="users-tab" class="admin-tab">Users</a>
             <a href="#" id="orders-tab" class="admin-tab">Orders</a>
-            <!-- Auth links will be populated by auth.js -->
         </nav>
     </header>
     
@@ -58,7 +57,6 @@
                 
             </div>
         </section>
-        <!-- Order Management Section -->
         </section>
         <section id="orders-admin" class="admin-section">
             <div class="admin-header">
@@ -99,6 +97,11 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="product-price">Price (€):</label>
+                    <input type="number" id="product-price" name="price" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
                     <label for="product-tags">Tags (comma separated):</label>
                     <input type="text" id="product-tags" name="tags" placeholder="weapon, melee, iconic">
                 </div>
@@ -106,14 +109,6 @@
                 <div class="form-group">
                     <label for="product-images">Images (comma separated URLs):</label>
                     <textarea id="product-images" name="images" placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"></textarea>
-                </div>
-                
-                <div class="variants-section">
-                    <h4>Product Variants</h4>
-                    <div id="variants-container">
-                        
-                    </div>
-                    <button type="button" id="add-variant-btn" class="btn btn-secondary">Add Variant</button>
                 </div>
                 
                 <div class="form-actions">

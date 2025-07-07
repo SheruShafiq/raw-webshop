@@ -13,24 +13,19 @@ Except the following regions:
 ## Functionalities:
 - A (client) user can:
     1) View products
-    2) Search products
-    3) Wishilist products
-    4) Add products to cart
-    5) Purchase products
-    6) Track purchases and view old purchases
+    2) Add products to cart
+    3) Purchase products
+    4) Track purchases and view old purchases
 - An (admin) user can
     1) Add, remove, delete products
     2) Add, remove, delete categories
     3) Add, remove, delete users
 - Products have images hard saved to DB 
-- Products have variants (e.g. different sizes, colors, etc.) with images unique to each variant
-- Users get a randomised profile image from GIPHY based on their display name
 
 ## Structure:
 - A home page with a list of products
 - A product page with details of a product
 - A cart page with a list of products in the cart
-- A wishlist page with a list of products in the wishlist
 - A user profile page with a list of purchases
 - An admin page with a list of products, categories and users
 - A login page for users

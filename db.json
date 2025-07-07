@@ -31,16 +31,6 @@
       "id": 4,
       "name": "Delivered",
       "createdAt": "2023-10-01T12:00:00Z"
-    },
-    {
-      "id": 5,
-      "name": "Cancelled",
-      "createdAt": "2023-10-01T12:00:00Z"
-    },
-    {
-      "id": 6,
-      "name": "Refunded",
-      "createdAt": "2023-10-01T12:00:00Z"
     }
   ],
   "users": [
@@ -84,32 +74,6 @@
       "updatedAt": "2023-10-01T12:00:00Z"
     }
   ],
-  "addresses": [
-    {
-      "id": "addr_7th_heaven",
-      "userId": "usr_cloud",
-      "type": "shipping",
-      "street": "7th Heaven, Sector 7",
-      "city": "Midgar",
-      "zip": "777",
-      "country": "Gaia",
-      "isDefault": true,
-      "createdAt": "2023-10-01T12:00:00Z",
-      "updatedAt": "2023-10-01T12:00:00Z"
-    },
-    {
-      "id": "addr_shinra",
-      "userId": "FF7RMBU",
-      "type": "billing",
-      "street": "Shinra HQ, 1st Floor",
-      "city": "Midgar",
-      "zip": "700",
-      "country": "GA",
-      "isDefault": false,
-      "createdAt": "2025-06-20T09:30:00Z",
-      "updatedAt": null
-    }
-  ],
   "categories": [
     {
       "id": 1,
@@ -142,32 +106,14 @@
       "name": "Buster Sword",
       "description": "Iconic blade wielded by Cloud Strife.",
       "categoryId": 4,
+      "price": 2000,
       "tags": [
         "weapon",
         "melee",
         "iconic"
       ],
       "images": [
-        "assets/products/busterSword/main.webp",
-        "assets/products/busterSword/mythril.webp"
-      ],
-      "variants": [
-        {
-          "id": "var_buster_steel",
-          "sku": "BS-STD-STEEL",
-          "name": "Standard Steel",
-          "priceCents": 200000,
-          "weightGrams": 7000,
-          "image": "assets/products/busterSword/main.webp"
-        },
-        {
-          "id": "var_buster_mythril",
-          "sku": "BS-MYTHRIL",
-          "name": "Mythril Upgrade",
-          "priceCents": 230000,
-          "weightGrams": 5000,
-          "image": "assets/products/busterSword/mythril.webp"
-        }
+        "assets/products/busterSword/main.webp"
       ],
       "createdAt": "2023-10-01T12:00:00Z",
       "updatedAt": "2025-07-04T10:35:35.923Z",
@@ -178,22 +124,10 @@
       "name": "Fire Materia",
       "description": "Allows you to cast Fire spells.",
       "categoryId": 2,
+      "price": 500,
       "tags": [
         "magic",
         "materia"
-      ],
-      "variants": [
-        {
-          "id": "var_fire_base",
-          "sku": "MAT-FIRE",
-          "name": "Base Orb",
-          "priceCents": 50000,
-          "weightGrams": 50,
-          "dimensionsCm": {
-            "diameter": 5
-          },
-          "image": "https://example.com/images/fire_materia.jpg"
-        }
       ],
       "images": [
         "https://example.com/images/fire_materia.jpg"
@@ -207,25 +141,11 @@
       "name": "Potion",
       "description": "Restores 100 HP.",
       "categoryId": 3,
+      "price": 150,
       "tags": [
         "item",
         "consumable",
         "healing"
-      ],
-      "variants": [
-        {
-          "id": "var_potion_hi",
-          "sku": "ITM-POTION-100",
-          "name": "Hi Potion",
-          "priceCents": 15000,
-          "weightGrams": 200,
-          "dimensionsCm": {
-            "l": 5,
-            "w": 5,
-            "h": 12
-          },
-          "image": "https://example.com/images/potion.jpg"
-        }
       ],
       "images": [
         "https://example.com/images/potion.jpg"
@@ -239,69 +159,18 @@
       "name": "Tranfarence Module",
       "description": "Transference Module allows a character to use limit breaks much more frequently, greatly increasing their damage output (or in the case of Aerith, allowing her healing abilities to become active faster). It is useful on a character the player controls often, as AI-controlled party members do not expend ATB (or build it quickly) on their own. The player can couple it with Haste Haste and ATB Assist Materia ATB Assist Materia to build ATB faster, and thus use limits more frequently. Another good combo is the Refocus Materia Refocus Materia, giving more ATB slots and thus allowing ATB abilities to be used more quickly.",
       "categoryId": 3,
+      "price": 60,
       "tags": [
         "item",
         "gear",
         "limit"
       ],
       "images": [
-        "assets/products/transfarenceModule/mainT.png",
-        "assets/products/transfarenceModule/main.webp",
-        "assets/products/transfarenceModule/secondary.webp",
-        ""
-      ],
-      "variants": [
-        {
-          "id": "prod_tranfarence_mdl",
-          "sku": "BTD-RBIRTH",
-          "name": "Rebirth Variant",
-          "priceCents": 6000,
-          "weightGrams": 400,
-          "image": "assets/products/transfarenceModule/mainT.png,"
-        }
+        "assets/products/transfarenceModule/mainT.png"
       ],
       "createdAt": "2025-07-04T10:46:14.774Z",
       "updatedAt": "2025-07-04T10:46:14.774Z",
       "deletedAt": null
-    }
-  ],
-  "inventory": [
-    {
-      "productId": "prod_buster_sword",
-      "variantId": "var_buster_steel",
-      "location": "MIDGAR_WH_MAIN",
-      "stock": 5,
-      "updatedAt": "2025-07-03T07:40:00Z"
-    },
-    {
-      "productId": "prod_buster_sword",
-      "variantId": "var_buster_mythril",
-      "location": "MIDGAR_WH_MAIN",
-      "stock": 2,
-      "updatedAt": "2025-07-03T07:40:00Z"
-    },
-    {
-      "productId": "prod_fire_materia",
-      "variantId": "var_fire_base",
-      "location": "MIDGAR_WH_MAIN",
-      "stock": 20,
-      "updatedAt": "2025-07-03T07:40:00Z"
-    },
-    {
-      "productId": "prod_potion",
-      "variantId": "var_potion_standard",
-      "location": "MIDGAR_WH_MAIN",
-      "stock": 50,
-      "updatedAt": "2025-07-03T07:40:00Z"
-    }
-  ],
-  "wishlists": [
-    {
-      "userId": "usr_cloud",
-      "productIds": [
-        "prod_fire_materia"
-      ],
-      "addedAt": "2025-07-01T14:22:00Z"
     }
   ],
   "carts": [
@@ -311,12 +180,10 @@
       "items": [
         {
           "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
           "quantity": 1
         },
         {
           "productId": "prod_potion",
-          "variantId": "var_potion_standard",
           "quantity": 3
         }
       ],
@@ -330,7 +197,6 @@
       "items": [
         {
           "productId": "prod_fire_materia",
-          "variantId": "var_fire_base",
           "quantity": 2
         }
       ],
@@ -344,34 +210,20 @@
       "items": [
         {
           "productId": "prod_fire_materia",
-          "variantId": "var_fire_base",
           "quantity": 1
         },
         {
           "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_tranfarence_mdl",
           "quantity": 1
         }
       ],
       "createdAt": "2025-07-07T10:55:28.262Z",
-      "updatedAt": "2025-07-07T10:55:29.542Z",
+      "updatedAt": "2025-07-07T11:49:32.594Z",
       "expiresAt": "2025-07-14T10:55:28.262Z"
-    }
-  ],
-  "promotions": [
-    {
-      "id": "promo_ff7_launch",
-      "name": "FF7 Launch Discount",
-      "type": "coupon",
-      "code": "FF7LAUNCH",
-      "discountType": "percentage",
-      "discountValue": 15,
-      "maxUses": 1000,
-      "maxUsesPerCustomer": 1,
-      "startsAt": "2023-09-25T00:00:00Z",
-      "endsAt": "2023-10-31T23:59:59Z",
-      "createdAt": "2023-09-20T12:00:00Z",
-      "updatedAt": null
     }
   ],
   "orders": [
@@ -381,24 +233,14 @@
       "userId": "usr_cloud",
       "statusId": 2,
       "currency": "EUR",
-      "shippingAddressId": "addr_7th_heaven",
-      "billingAddressId": "addr_shinra",
-      "couponId": "promo_ff7_launch",
-      "totals": {
-        "subtotalCents": 200000,
-        "discountCents": 30000,
-        "taxCents": 20000,
-        "shippingCents": 2000,
-        "grandTotalCents": 192000
-      },
-      "Items": [
+      "total": 1920,
+      "items": [
         {
           "orderId": "ord_2025_000123",
           "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
-          "unitPriceCents": 200000,
+          "unitPrice": 2000,
           "quantity": 1,
-          "subtotalCents": 200000
+          "subtotal": 2000
         }
       ],
       "createdAt": "2023-10-01T12:00:00Z",
@@ -410,30 +252,19 @@
       "userId": "FF7RMBUXXXX",
       "statusId": 1,
       "currency": "EUR",
-      "shippingAddressId": null,
-      "billingAddressId": null,
-      "couponId": null,
-      "totals": {
-        "subtotalCents": 300000,
-        "discountCents": 0,
-        "taxCents": 0,
-        "shippingCents": 0,
-        "grandTotalCents": 300000
-      },
-      "Items": [
+      "total": 3000,
+      "items": [
         {
           "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
-          "unitPriceCents": 200000,
+          "unitPrice": 2000,
           "quantity": 1,
-          "subtotalCents": 200000
+          "subtotal": 2000
         },
         {
           "productId": "prod_fire_materia",
-          "variantId": "var_fire_base",
-          "unitPriceCents": 50000,
+          "unitPrice": 500,
           "quantity": 2,
-          "subtotalCents": 100000
+          "subtotal": 1000
         }
       ],
       "createdAt": "2025-07-07T10:55:19.841Z",
@@ -445,23 +276,13 @@
       "userId": "FF7RMBUXXXX",
       "statusId": 1,
       "currency": "EUR",
-      "shippingAddressId": null,
-      "billingAddressId": null,
-      "couponId": null,
-      "totals": {
-        "subtotalCents": 50000,
-        "discountCents": 0,
-        "taxCents": 0,
-        "shippingCents": 0,
-        "grandTotalCents": 50000
-      },
-      "Items": [
+      "total": 500,
+      "items": [
         {
           "productId": "prod_fire_materia",
-          "variantId": "var_fire_base",
-          "unitPriceCents": 50000,
+          "unitPrice": 500,
           "quantity": 1,
-          "subtotalCents": 50000
+          "subtotal": 500
         }
       ],
       "createdAt": "2025-07-07T10:55:25.381Z",
@@ -473,34 +294,53 @@
       "userId": "FF7RMBUXXXX",
       "statusId": 1,
       "currency": "EUR",
-      "shippingAddressId": null,
-      "billingAddressId": null,
-      "couponId": null,
-      "totals": {
-        "subtotalCents": 250000,
-        "discountCents": 0,
-        "taxCents": 0,
-        "shippingCents": 0,
-        "grandTotalCents": 250000
-      },
-      "Items": [
+      "total": 2500,
+      "items": [
         {
           "productId": "prod_fire_materia",
-          "variantId": "var_fire_base",
-          "unitPriceCents": 50000,
+          "unitPrice": 500,
           "quantity": 1,
-          "subtotalCents": 50000
+          "subtotal": 500
         },
         {
           "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
-          "unitPriceCents": 200000,
+          "unitPrice": 2000,
           "quantity": 1,
-          "subtotalCents": 200000
+          "subtotal": 2000
         }
       ],
       "createdAt": "2025-07-07T10:55:33.186Z",
       "updatedAt": "2025-07-07T10:55:33.186Z"
+    },
+    {
+      "id": "ord_1751888976109",
+      "orderNumber": "2025-976109",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 2560,
+      "items": [
+        {
+          "productId": "prod_fire_materia",
+          "unitPrice": 500,
+          "quantity": 1,
+          "subtotal": 500
+        },
+        {
+          "productId": "prod_buster_sword",
+          "unitPrice": 2000,
+          "quantity": 1,
+          "subtotal": 2000
+        },
+        {
+          "productId": "prod_tranfarence_mdl",
+          "unitPrice": 60,
+          "quantity": 1,
+          "subtotal": 60
+        }
+      ],
+      "createdAt": "2025-07-07T11:49:36.109Z",
+      "updatedAt": "2025-07-07T11:49:36.109Z"
     }
   ]
 }

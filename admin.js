@@ -74,9 +74,6 @@ function setupModalHandlers() {
             closeModals();
         }
     });
-    
-    
-    document.getElementById('add-variant-btn').addEventListener('click', addVariantForm);
 }
 
 function setupFormHandlers() {
@@ -181,7 +178,7 @@ function displayProducts(products) {
                 <p><strong>ID:</strong> ${product.id}</p>
                 <p><strong>Description:</strong> ${product.description}</p>
                 <p><strong>Category ID:</strong> ${product.categoryId}</p>
-                <p><strong>Variants:</strong> ${product.variants ? product.variants.length : 0}</p>
+                <p><strong>Price:</strong> €${product.price ? product.price.toFixed(2) : 'N/A'}</p>
                 <p><strong>Tags:</strong> ${product.tags ? product.tags.join(', ') : 'None'}</p>
             </div>
             <div class="admin-item-actions">
@@ -251,14 +248,8 @@ function displayOrders(orders, statuses, users) {
         const status = statuses.find(s => s.id === order.statusId)?.name || 'Unknown';
         const user = users.find(u => u.id === order.userId);
         const customer = user ? user.displayName : 'Guest';
-        const total = (order.totals.grandTotalCents / 100).toFixed(2);
-        let actions = '';
-        if (order.statusId === 1) {
-            actions = `
-                <button class="btn btn-primary" onclick="handleOrderAction('${order.id}', 2)">Mark as Paid</button>
-                <button class="btn btn-outline" onclick="handleOrderAction('${order.id}', 5)">Cancel</button>
-            `;
-        }
+        const total = order.total ? order.total.toFixed(2) : '0.00';
+        
         return `
             <div class="admin-item">
                 <div class="admin-item-info">
@@ -267,9 +258,6 @@ function displayOrders(orders, statuses, users) {
                     <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
                     <p><strong>Status:</strong> ${status}</p>
                     <p><strong>Total:</strong> €${total}</p>
-                </div>
-                <div class="admin-item-actions">
-                    ${actions}
                 </div>
             </div>
         `;
@@ -288,8 +276,6 @@ function openProductModal(product = null) {
     } else {
         title.textContent = 'Add Product';
         form.reset();
-        document.getElementById('variants-container').innerHTML = '';
-        addVariantForm(); 
     }
     
     modal.style.display = 'block';
@@ -325,20 +311,9 @@ function populateProductForm(product) {
     document.getElementById('product-name').value = product.name;
     document.getElementById('product-description').value = product.description;
     document.getElementById('product-category').value = product.categoryId;
+    document.getElementById('product-price').value = product.price || '';
     document.getElementById('product-tags').value = product.tags ? product.tags.join(', ') : '';
     document.getElementById('product-images').value = product.images ? product.images.join(', ') : '';
-    
-    
-    const variantsContainer = document.getElementById('variants-container');
-    variantsContainer.innerHTML = '';
-    
-    if (product.variants && product.variants.length > 0) {
-        product.variants.forEach(variant => {
-            addVariantForm(variant);
-        });
-    } else {
-        addVariantForm();
-    }
 }
 
 function populateCategoryForm(category) {
@@ -346,105 +321,27 @@ function populateCategoryForm(category) {
     document.getElementById('category-parent').value = category.parentId || '';
 }
 
-function addVariantForm(variant = null) {
-    const container = document.getElementById('variants-container');
-    const variantCount = container.children.length;
-    
-    const variantHtml = `
-        <div class="variant-form" data-variant-index="${variantCount}">
-            <h5>Variant ${variantCount + 1}</h5>
-            <div class="variant-form-grid">
-                <div class="form-group">
-                    <label>Variant ID:</label>
-                    <input type="text" name="variants[${variantCount}][id]" value="${variant ? variant.id : ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>SKU:</label>
-                    <input type="text" name="variants[${variantCount}][sku]" value="${variant ? variant.sku : ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>Name:</label>
-                    <input type="text" name="variants[${variantCount}][name]" value="${variant ? variant.name : ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>Price (cents):</label>
-                    <input type="number" name="variants[${variantCount}][priceCents]" value="${variant ? variant.priceCents : ''}" required>
-                </div>
-                <div class="form-group">
-                    <label>Weight (grams):</label>
-                    <input type="number" name="variants[${variantCount}][weightGrams]" value="${variant ? variant.weightGrams : ''}">
-                </div>
-                <div class="form-group">
-                    <label>Image URL:</label>
-                    <input name="variants[${variantCount}][image]" value="${variant ? variant.image : ''}">
-                </div>
-            </div>
-            <button type="button" class="btn btn-outline remove-variant-btn" onclick="removeVariantForm(this)">Remove Variant</button>
-        </div>
-    `;
-    
-    container.insertAdjacentHTML('beforeend', variantHtml);
-}
-
-function removeVariantForm(button) {
-    const variantForm = button.closest('.variant-form');
-    variantForm.remove();
-    
-    
-    const variants = document.querySelectorAll('.variant-form');
-    variants.forEach((variant, index) => {
-        variant.setAttribute('data-variant-index', index);
-        variant.querySelector('h5').textContent = `Variant ${index + 1}`;
-        
-        const inputs = variant.querySelectorAll('input');
-        inputs.forEach(input => {
-            const name = input.getAttribute('name');
-            if (name) {
-                const newName = name.replace(/\[\d+\]/, `[${index}]`);
-                input.setAttribute('name', newName);
-            }
-        });
-    });
-}
-
 async function handleProductSubmit(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
-    
     
     const product = {
         id: formData.get('id'),
         name: formData.get('name'),
         description: formData.get('description'),
         categoryId: parseInt(formData.get('categoryId')),
+        price: parseFloat(formData.get('price')),
         tags: formData.get('tags') ? formData.get('tags').split(',').map(tag => tag.trim()) : [],
         images: formData.get('images') ? formData.get('images').split(',').map(img => img.trim()) : [],
-        variants: [],
         createdAt: currentEditingProduct ? currentEditingProduct.createdAt : new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         deletedAt: null
     };
     
-    
-    const variantForms = document.querySelectorAll('.variant-form');
-    variantForms.forEach((form, index) => {
-        const variant = {
-            id: formData.get(`variants[${index}][id]`),
-            sku: formData.get(`variants[${index}][sku]`),
-            name: formData.get(`variants[${index}][name]`),
-            priceCents: parseInt(formData.get(`variants[${index}][priceCents]`)),
-            weightGrams: parseInt(formData.get(`variants[${index}][weightGrams]`)) || 0,
-            image: formData.get(`variants[${index}][image]`) || ''
-        };
-        
-        product.variants.push(variant);
-    });
-    
     try {
         let response;
         if (currentEditingProduct) {
-            
             response = await fetch(`${ADMIN_API_BASE_URL}/products/${product.id}`, {
                 method: 'PUT',
                 headers: {
@@ -453,7 +350,6 @@ async function handleProductSubmit(e) {
                 body: JSON.stringify(product)
             });
         } else {
-            
             response = await fetch(`${ADMIN_API_BASE_URL}/products`, {
                 method: 'POST',
                 headers: {
@@ -544,22 +440,6 @@ async function editCategory(categoryId) {
     } catch (error) {
         console.error('Error loading category for editing:', error);
         alert('Error loading category. Please try again.');
-    }
-}
-
-async function handleOrderAction(orderId, newStatusId) {
-    if (!confirm('Are you sure?')) return;
-    try {
-        await fetch(`${ADMIN_API_BASE_URL}/orders/${orderId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ statusId: newStatusId, updatedAt: new Date().toISOString() })
-        });
-        await loadOrders();
-        alert('Order updated successfully!');
-    } catch (error) {
-        console.error('Error updating order:', error);
-        alert('Failed to update order.');
     }
 }
 
