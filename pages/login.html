@@ -15,18 +15,17 @@
         <nav>
             <a href="../index.html">Home</a>
             <a href="#" id="cart-link">Cart</a>
-            <a href="#" id="wishlist-link">Wishlist</a>
         </nav>
     </header>
     
     <main>
         <section class="auth-section">
             <div class="auth-container">
-                <h2>Login to Your Account</h2>
+                <h2>Access Terminal</h2>
                 
                 <form id="login-form" class="auth-form">
                     <div class="form-group">
-                        <label for="login-email">Email:</label>
+                        <label for="login-email">ID:</label>
                         <input type="email" id="login-email" name="email" required>
                     </div>
                     
@@ -36,13 +35,13 @@
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Login</button>
-                        <button type="button" class="btn btn-outline" onclick="showRegisterForm()">Create Account</button>
+                        <button type="submit" class="btn btn-primary">Connect</button>
+                        <button type="button" class="btn btn-outline" onclick="showRegisterForm()">New Member</button>
                     </div>
                 </form>
                 
                 <form id="register-form" class="auth-form" style="display: none;">
-                    <h2>Create New Account</h2>
+                    <h2>Member Registration</h2>
                     
                     <div class="form-group">
                         <label for="register-display-name">Display Name:</label>
@@ -50,7 +49,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="register-email">Email:</label>
+                        <label for="register-email">ID:</label>
                         <input type="email" id="register-email" name="email" required>
                     </div>
                     
@@ -60,13 +59,13 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="register-confirm-password">Confirm Password:</label>
+                        <label for="register-confirm-password">Confirm:</label>
                         <input type="password" id="register-confirm-password" name="confirmPassword" required>
                     </div>
                     
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Create Account</button>
-                        <button type="button" class="btn btn-outline" onclick="showLoginForm()">Back to Login</button>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="button" class="btn btn-outline" onclick="showLoginForm()">Back</button>
                     </div>
                 </form>
                 

@@ -84,6 +84,12 @@ async function handleLogin(e) {
     const email = formData.get('email');
     const password = formData.get('password');
     
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Connecting...';
+    submitBtn.disabled = true;
+    
     try {
         
         const response = await fetch(`${AUTH_API_BASE_URL}/users`);
@@ -105,7 +111,7 @@ async function handleLogin(e) {
             
             localStorage.setItem('wallMarketUser', JSON.stringify(currentUser));
             
-            showAuthMessage('Login successful! Redirecting...', 'success');
+            showAuthMessage('Access granted! Welcome to Wall Market...', 'success');
             
             
             setTimeout(() => {
@@ -113,11 +119,15 @@ async function handleLogin(e) {
             }, 1500);
             
         } else {
-            showAuthMessage('Invalid email or password.', 'error');
+            showAuthMessage('Access denied. Invalid credentials.', 'error');
         }
     } catch (error) {
         console.error('Login error:', error);
-        showAuthMessage('Login failed. Please try again.', 'error');
+        showAuthMessage('Connection failed. Please try again.', 'error');
+    } finally {
+        
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
 }
 
@@ -131,14 +141,24 @@ async function handleRegister(e) {
     const confirmPassword = formData.get('confirmPassword');
     
     
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Creating...';
+    submitBtn.disabled = true;
+    
+    
     if (password !== confirmPassword) {
-        showAuthMessage('Passwords do not match.', 'error');
+        showAuthMessage('Password mismatch detected.', 'error');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
         return;
     }
     
     
     if (password.length < 6) {
-        showAuthMessage('Password must be at least 6 characters long.', 'error');
+        showAuthMessage('Password must be at least 6 characters.', 'error');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
         return;
     }
     
@@ -148,7 +168,7 @@ async function handleRegister(e) {
         const users = await response.json();
         
         if (users.find(u => u.email === email && !u.deletedAt)) {
-            showAuthMessage('An account with this email already exists.', 'error');
+            showAuthMessage('User record already exists.', 'error');
             return;
         }
         
@@ -173,7 +193,7 @@ async function handleRegister(e) {
         });
         
         if (createResponse.ok) {
-            showAuthMessage('Account created successfully! You can now login.', 'success');
+            showAuthMessage('New member registered! Access Wall Market now.', 'success');
             showLoginForm();
         } else {
             throw new Error('Failed to create account');
@@ -182,6 +202,10 @@ async function handleRegister(e) {
     } catch (error) {
         console.error('Registration error:', error);
         showAuthMessage('Registration failed. Please try again.', 'error');
+    } finally {
+        
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     }
 }
 
