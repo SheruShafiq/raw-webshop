@@ -335,10 +335,81 @@ async function loadUserProfile() {
     if (!profileContent || !window.currentUser) return;
     
     try {
-        
+        // Load user profile data
         const profileResponse = await fetch(`${AUTH_API_BASE_URL}/userProfiles?userId=${window.currentUser.id}`);
         const profiles = await profileResponse.json();
         const profile = profiles[0];
+        
+        // Load user orders
+        const ordersResponse = await fetch(`${AUTH_API_BASE_URL}/orders?userId=${window.currentUser.id}`);
+        const orders = await ordersResponse.json();
+        const sortedOrders = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        // Load statuses for orders
+        const statusesResponse = await fetch(`${AUTH_API_BASE_URL}/statuses`);
+        const statuses = await statusesResponse.json();
+        const statusMap = {};
+        statuses.forEach(status => {
+            statusMap[status.id] = status.name;
+        });
+        
+        // Load products for order details
+        const productsResponse = await fetch(`${AUTH_API_BASE_URL}/products`);
+        const products = await productsResponse.json();
+        const productMap = {};
+        products.forEach(product => {
+            productMap[product.id] = product;
+        });
+        
+        let ordersHtml = '';
+        if (sortedOrders.length > 0) {
+            ordersHtml = `
+                <div class="profile-orders">
+                    <h4>Order History</h4>
+                    <div class="orders-list">
+                        ${sortedOrders.map(order => {
+                            const statusName = statusMap[order.statusId] || 'Unknown';
+                            const orderDate = new Date(order.createdAt).toLocaleDateString();
+                            
+                            const itemsHtml = order.items.map(item => {
+                                const product = productMap[item.productId];
+                                const productName = product ? product.name : 'Unknown Product';
+                                return `
+                                    <div class="order-item">
+                                        <span class="item-name">${productName}</span>
+                                        <span class="item-quantity">x${item.quantity}</span>
+                                        <span class="item-price">${item.subtotal} ${order.currency}</span>
+                                    </div>
+                                `;
+                            }).join('');
+                            
+                            return `
+                                <div class="order-card ff7-window">
+                                    <div class="order-header">
+                                        <div class="order-number">Order #${order.orderNumber}</div>
+                                        <div class="order-status status-${statusName.toLowerCase()}">${statusName}</div>
+                                    </div>
+                                    <div class="order-date">${orderDate}</div>
+                                    <div class="order-items">
+                                        ${itemsHtml}
+                                    </div>
+                                    <div class="order-total">
+                                        <strong>Total: ${order.total} ${order.currency}</strong>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        } else {
+            ordersHtml = `
+                <div class="profile-orders">
+                    <h4>Order History</h4>
+                    <p class="no-orders">No orders found. Start shopping to see your order history!</p>
+                </div>
+            `;
+        }
         
         profileContent.innerHTML = `
             <div class="profile-info">
@@ -364,6 +435,7 @@ async function loadUserProfile() {
                     </div>
                 ` : ''}
             </div>
+            ${ordersHtml}
         `;
     } catch (error) {
         console.error('Error loading profile:', error);

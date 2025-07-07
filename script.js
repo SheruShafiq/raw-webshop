@@ -665,6 +665,50 @@ async function createOrder(orderData) {
   }
 }
 
+async function getUserOrders(userId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/orders?userId=${userId}`);
+    if (response.ok) {
+      const orders = await response.json();
+      return orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else {
+      throw new Error("Failed to fetch orders");
+    }
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return [];
+  }
+}
+
+async function getOrderStatus(statusId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/statuses/${statusId}`);
+    if (response.ok) {
+      const status = await response.json();
+      return status.name;
+    } else {
+      return "Unknown";
+    }
+  } catch (error) {
+    console.error("Error fetching status:", error);
+    return "Unknown";
+  }
+}
+
+async function getProductDetails(productId) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/products/${productId}`);
+    if (response.ok) {
+      return await response.json();
+    } else {
+      return { name: "Unknown Product", price: 0 };
+    }
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+    return { name: "Unknown Product", price: 0 };
+  }
+}
+
 async function clearCart() {
   if (!currentCart) return;
 

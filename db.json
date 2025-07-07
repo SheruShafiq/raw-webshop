@@ -130,10 +130,12 @@
         "materia"
       ],
       "images": [
-        "https://example.com/images/fire_materia.jpg"
+        "assets/products/fireMateria/main.png",
+        "assets/products/fireMateria/irl.jpg",
+        "assets/products/fireMateria/secondary.jpg"
       ],
       "createdAt": "2023-10-01T12:00:00Z",
-      "updatedAt": "2025-06-30T11:00:00Z",
+      "updatedAt": "2025-07-07T13:38:04.383Z",
       "deletedAt": null
     },
     {
@@ -148,10 +150,12 @@
         "healing"
       ],
       "images": [
-        "https://example.com/images/potion.jpg"
+        "assets/products/potion/maint.png",
+        "assets/products/potion/3D.png",
+        "assets/products/potion/main.avif"
       ],
       "createdAt": "2023-10-01T12:00:00Z",
-      "updatedAt": "2025-06-28T09:20:00Z",
+      "updatedAt": "2025-07-07T13:41:06.918Z",
       "deletedAt": null
     },
     {
@@ -339,6 +343,24 @@
       ],
       "createdAt": "2025-07-07T11:49:36.109Z",
       "updatedAt": "2025-07-07T11:49:36.109Z"
+    },
+    {
+      "id": "ord_1751895055352",
+      "orderNumber": "2025-055352",
+      "userId": "USER_1751626469048",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 2000,
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "unitPrice": 2000,
+          "quantity": 1,
+          "subtotal": 2000
+        }
+      ],
+      "createdAt": "2025-07-07T13:30:55.352Z",
+      "updatedAt": "2025-07-07T13:30:55.352Z"
     }
   ]
 }
