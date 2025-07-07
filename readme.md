@@ -43,3 +43,13 @@ Except the following regions:
 1) ```npm install```
 2) ```npm run dev``` will start the server and the client
 3)  PROD: ```still needs to be done```
+
+
+
+TODO:
+- Sound effects
+- Keyboard navigation
+- Custom mouse
+- Styles correction
+- Better products setup
+- GIF based profiles
