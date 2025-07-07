@@ -3,7 +3,6 @@ const AUTH_API_BASE_URL = 'http://localhost:3000';
 
 
 window.currentUser = null;
-let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -23,8 +22,9 @@ function initializeAuth() {
     
     const storedUser = localStorage.getItem('wallMarketUser');
     if (storedUser) {
-        currentUser = JSON.parse(storedUser);
-        window.currentUser = currentUser;
+        window.currentUser = JSON.parse(storedUser);
+    } else {
+        window.currentUser = null;
     }
 }
 
@@ -122,13 +122,12 @@ async function handleLogin(e) {
             const role = await roleResponse.json();
             
             
-            currentUser = {
+            window.currentUser = {
                 ...user,
                 role: role
             };
-            window.currentUser = currentUser;
-            
-            localStorage.setItem('wallMarketUser', JSON.stringify(currentUser));
+
+            localStorage.setItem('wallMarketUser', JSON.stringify(window.currentUser));
             
             showAuthMessage('Access granted! Welcome to Wall Market...', 'success');
             
@@ -229,7 +228,6 @@ async function handleRegister(e) {
 }
 
 function handleLogout() {
-    currentUser = null;
     window.currentUser = null;
     localStorage.removeItem('wallMarketUser');
     
@@ -287,17 +285,17 @@ function updateNavigation() {
     const existingAuthLinks = nav.querySelectorAll('.auth-link');
     existingAuthLinks.forEach(link => link.remove());
     
-    if (currentUser) {
+    if (window.currentUser) {
         
         const profileLink = document.createElement('a');
         profileLink.href = '#';
         profileLink.id = 'profile-link';
         profileLink.className = 'auth-link';
-        profileLink.textContent = `Welcome, ${currentUser.displayName}`;
+        profileLink.textContent = `Welcome, ${window.currentUser.displayName}`;
         nav.appendChild(profileLink);
         
         
-        if (currentUser.role && currentUser.role.name === 'Admin') {
+        if (window.currentUser.role && window.currentUser.role.name === 'Admin') {
             const adminLink = document.createElement('a');
             adminLink.href = '#';
             adminLink.id = 'admin-link';
@@ -326,7 +324,7 @@ function checkUserSession() {
     }
     
     
-    if (window.location.pathname.includes('admin.html') && (!currentUser || currentUser.role.name !== 'Admin')) {
+    if (window.location.pathname.includes('admin.html') && (!window.currentUser || window.currentUser.role.name !== 'Admin')) {
         alert('Access denied. Admin privileges required.');
         window.location.href = getPagePath('login.html');
     }
@@ -334,11 +332,11 @@ function checkUserSession() {
 
 async function loadUserProfile() {
     const profileContent = document.getElementById('profile-content');
-    if (!profileContent || !currentUser) return;
+    if (!profileContent || !window.currentUser) return;
     
     try {
         
-        const profileResponse = await fetch(`${AUTH_API_BASE_URL}/userProfiles?userId=${currentUser.id}`);
+        const profileResponse = await fetch(`${AUTH_API_BASE_URL}/userProfiles?userId=${window.currentUser.id}`);
         const profiles = await profileResponse.json();
         const profile = profiles[0];
         
@@ -346,16 +344,16 @@ async function loadUserProfile() {
             <div class="profile-info">
                 <h3>Account Information</h3>
                 <div class="profile-field">
-                    <strong>Display Name:</strong> ${currentUser.displayName}
+                    <strong>Display Name:</strong> ${window.currentUser.displayName}
                 </div>
                 <div class="profile-field">
-                    <strong>Email:</strong> ${currentUser.email}
+                    <strong>Email:</strong> ${window.currentUser.email}
                 </div>
                 <div class="profile-field">
-                    <strong>Role:</strong> ${currentUser.role ? currentUser.role.name : 'User'}
+                    <strong>Role:</strong> ${window.currentUser.role ? window.currentUser.role.name : 'User'}
                 </div>
                 <div class="profile-field">
-                    <strong>Member Since:</strong> ${new Date(currentUser.createdAt).toLocaleDateString()}
+                    <strong>Member Since:</strong> ${new Date(window.currentUser.createdAt).toLocaleDateString()}
                 </div>
                 ${profile ? `
                     <div class="profile-field">
@@ -375,15 +373,15 @@ async function loadUserProfile() {
 
 
 function isLoggedIn() {
-    return currentUser !== null;
+    return window.currentUser !== null;
 }
 
 function isAdmin() {
-    return currentUser && currentUser.role && currentUser.role.name === 'Admin';
+    return window.currentUser && window.currentUser.role && window.currentUser.role.name === 'Admin';
 }
 
 function getCurrentUser() {
-    return currentUser;
+    return window.currentUser;
 }
 
 
