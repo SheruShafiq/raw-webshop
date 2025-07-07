@@ -1,5 +1,4 @@
-
-const ADMIN_API_BASE_URL = 'http://localhost:3001';
+const ADMIN_API_BASE_URL = 'http://localhost:3000';
 
 let currentEditingProduct = null;
 let currentEditingCategory = null;
@@ -31,20 +30,15 @@ function initializeAdmin() {
 }
 
 function switchTab(tabId) {
-    
     document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.admin-section').forEach(section => section.classList.remove('active'));
-    
-    
     document.getElementById(tabId).classList.add('active');
-    
-    
     const sectionMap = {
         'products-tab': 'products-admin',
         'categories-tab': 'categories-admin',
-        'users-tab': 'users-admin'
+        'users-tab': 'users-admin',
+        'orders-tab': 'orders-admin'
     };
-    
     document.getElementById(sectionMap[tabId]).classList.add('active');
 }
 
@@ -98,6 +92,7 @@ async function loadAllData() {
     await loadCategories();
     await loadUsers();
     await loadCategoriesForSelects();
+    await loadOrders();
 }
 
 async function loadProducts() {
@@ -150,6 +145,24 @@ async function loadCategoriesForSelects() {
         });
     } catch (error) {
         console.error('Error loading categories for selects:', error);
+    }
+}
+
+async function loadOrders() {
+    try {
+        const [ordersRes, statusesRes, usersRes] = await Promise.all([
+            fetch(`${ADMIN_API_BASE_URL}/orders`),
+            fetch(`${ADMIN_API_BASE_URL}/statuses`),
+            fetch(`${ADMIN_API_BASE_URL}/users`)
+        ]);
+        const [orders, statuses, users] = await Promise.all([
+            ordersRes.json(),
+            statusesRes.json(),
+            usersRes.json()
+        ]);
+        displayOrders(orders, statuses, users);
+    } catch (error) {
+        console.error('Error loading orders:', error);
     }
 }
 
@@ -225,6 +238,42 @@ function displayUsers(users) {
             </div>
         </div>
     `).join('');
+}
+
+function displayOrders(orders, statuses, users) {
+    const container = document.getElementById('orders-list');
+    if (!container) return;
+    if (!orders.length) {
+        container.innerHTML = '<p>No orders found.</p>';
+        return;
+    }
+    container.innerHTML = orders.map(order => {
+        const status = statuses.find(s => s.id === order.statusId)?.name || 'Unknown';
+        const user = users.find(u => u.id === order.userId);
+        const customer = user ? user.displayName : 'Guest';
+        const total = (order.totals.grandTotalCents / 100).toFixed(2);
+        let actions = '';
+        if (order.statusId === 1) {
+            actions = `
+                <button class="btn btn-primary" onclick="handleOrderAction('${order.id}', 2)">Mark as Paid</button>
+                <button class="btn btn-outline" onclick="handleOrderAction('${order.id}', 5)">Cancel</button>
+            `;
+        }
+        return `
+            <div class="admin-item">
+                <div class="admin-item-info">
+                    <p><strong>Order #:</strong> ${order.orderNumber}</p>
+                    <p><strong>Customer:</strong> ${customer}</p>
+                    <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
+                    <p><strong>Status:</strong> ${status}</p>
+                    <p><strong>Total:</strong> €${total}</p>
+                </div>
+                <div class="admin-item-actions">
+                    ${actions}
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 function openProductModal(product = null) {
@@ -495,6 +544,22 @@ async function editCategory(categoryId) {
     } catch (error) {
         console.error('Error loading category for editing:', error);
         alert('Error loading category. Please try again.');
+    }
+}
+
+async function handleOrderAction(orderId, newStatusId) {
+    if (!confirm('Are you sure?')) return;
+    try {
+        await fetch(`${ADMIN_API_BASE_URL}/orders/${orderId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ statusId: newStatusId, updatedAt: new Date().toISOString() })
+        });
+        await loadOrders();
+        alert('Order updated successfully!');
+    } catch (error) {
+        console.error('Error updating order:', error);
+        alert('Failed to update order.');
     }
 }
 

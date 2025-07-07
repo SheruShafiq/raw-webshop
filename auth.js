@@ -1,5 +1,5 @@
 // Authentication system for Wall Market Online
-const AUTH_API_BASE_URL = 'http://localhost:3001';
+const AUTH_API_BASE_URL = 'http://localhost:3000';
 
 // Current user state
 let currentUser = null;

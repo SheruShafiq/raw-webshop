@@ -65,7 +65,7 @@
       "deletedAt": null
     },
     {
-       "id": "FF7RMBUXXXX",
+      "id": "FF7RMBUXXXX",
       "displayName": "Jenova",
       "email": "jenova@ff7.com",
       "password": "CETRAA",
@@ -337,6 +337,34 @@
       "createdAt": "2025-07-03T09:00:00Z",
       "updatedAt": "2025-07-03T09:10:00Z",
       "expiresAt": "2025-07-10T09:00:00Z"
+    },
+    {
+      "id": "cart_FF7RMBUXXXX_1751879793838",
+      "userId": "FF7RMBUXXXX",
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2025-07-07T09:16:33.838Z",
+      "updatedAt": "2025-07-07T09:16:33.839Z",
+      "expiresAt": "2025-07-14T09:16:33.839Z"
+    },
+    {
+      "id": "cart_FF7RMBUXXXX_1751879801328",
+      "userId": "FF7RMBUXXXX",
+      "items": [
+        {
+          "productId": "prod_fire_materia",
+          "variantId": "var_fire_base",
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2025-07-07T09:16:41.328Z",
+      "updatedAt": "2025-07-07T09:16:41.328Z",
+      "expiresAt": "2025-07-14T09:16:41.328Z"
     }
   ],
   "promotions": [
