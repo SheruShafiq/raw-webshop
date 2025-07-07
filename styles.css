@@ -244,11 +244,102 @@ h2 {
 .product-image {
     width: 100%;
     height: 200px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 0;
     margin-bottom: 1rem;
     border: 2px solid;
     border-color: var(--ff7-window-border-dark) var(--ff7-window-border-light) var(--ff7-window-border-light) var(--ff7-window-border-dark);
+    transition: all 0.3s ease;
+}
+
+
+.product-image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.product-image-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.product-image-carousel .product-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    margin-bottom: 0;
+}
+
+.product-image-carousel .product-image.active {
+    opacity: 1;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 128, 0.8);
+    color: var(--ff7-text-white);
+    border: 2px solid var(--ff7-window-border-light);
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.carousel-btn:hover {
+    background: var(--ff7-selected-bg);
+    border-color: var(--ff7-text-yellow);
+    color: var(--ff7-text-yellow);
+}
+
+.carousel-prev {
+    left: 5px;
+}
+
+.carousel-next {
+    right: 5px;
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+}
+
+.carousel-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--ff7-window-border-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.carousel-indicator.active,
+.carousel-indicator:hover {
+    background: var(--ff7-text-yellow);
+    border-color: var(--ff7-text-yellow);
 }
 
 .product-name {
@@ -371,11 +462,91 @@ h2 {
     gap: 1rem;
 }
 
+
+.main-image-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 1rem;
+}
+
 .product-detail-image {
     width: 100%;
     max-width: 400px;
-    border: 2px solid var(--ff7-border);
-    border-radius: 8px;
+    border: 2px solid var(--ff7-window-border-dark);
+    border-color: var(--ff7-window-border-dark) var(--ff7-window-border-light) var(--ff7-window-border-light) var(--ff7-window-border-dark);
+    border-radius: 0;
+    transition: all 0.3s ease;
+    object-fit: contain;
+    height: 100%;
+    max-height: 400px;
+}
+
+
+.image-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 128, 0.9);
+    color: var(--ff7-text-white);
+    border: 2px solid var(--ff7-window-border-light);
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.image-nav-btn:hover {
+    background: var(--ff7-selected-bg);
+    border-color: var(--ff7-text-yellow);
+    color: var(--ff7-text-yellow);
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
+}
+
+.image-prev {
+    left: 10px;
+}
+
+.image-next {
+    right: 10px;
+}
+
+
+.thumbnail-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid var(--ff7-window-border-dark);
+    border-color: var(--ff7-window-border-dark) var(--ff7-window-border-light) var(--ff7-window-border-light) var(--ff7-window-border-dark);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0.7;
+}
+
+.thumbnail:hover {
+    opacity: 1;
+    border-color: var(--ff7-cursor-blue);
+    box-shadow: 0 0 5px rgba(64, 128, 255, 0.5);
+}
+
+.thumbnail.active {
+    opacity: 1;
+    border-color: var(--ff7-text-yellow);
+    box-shadow: 0 0 10px rgba(255, 255, 0, 0.5);
 }
 
 .product-info h1 {
@@ -1227,7 +1398,7 @@ form {
     box-shadow: 0 0 5px #ff4040;
 }
 
-/* FF7 Keyboard Navigation Styles */
+
 .ff7-keyboard-focus {
     position: relative;
     background: var(--ff7-selected-bg) !important;
@@ -1264,7 +1435,7 @@ form {
     }
 }
 
-/* Enhanced button focus states */
+
 button.ff7-keyboard-focus,
 .btn.ff7-keyboard-focus {
     color: var(--ff7-text-yellow) !important;
@@ -1272,7 +1443,7 @@ button.ff7-keyboard-focus,
     transform: scale(1.02);
 }
 
-/* Enhanced product card focus */
+
 .product-card.ff7-keyboard-focus {
     transform: translateY(-2px) !important;
     border-color: var(--ff7-cursor-blue) !important;
@@ -1283,7 +1454,7 @@ button.ff7-keyboard-focus,
     text-shadow: 0 0 5px var(--ff7-cursor-blue) !important;
 }
 
-/* Navigation focus */
+
 nav a.ff7-keyboard-focus {
     background: var(--ff7-selected-bg) !important;
     color: var(--ff7-text-yellow) !important;
@@ -1298,7 +1469,7 @@ nav a.ff7-keyboard-focus::before {
     text-shadow: 0 0 5px var(--ff7-cursor-blue) !important;
 }
 
-/* Input focus styles */
+
 input.ff7-keyboard-focus,
 textarea.ff7-keyboard-focus,
 select.ff7-keyboard-focus {
@@ -1307,7 +1478,7 @@ select.ff7-keyboard-focus {
     color: var(--ff7-text-yellow) !important;
 }
 
-/* Cursor image styling */
+
 #ff7-cursor {
     filter: drop-shadow(0 0 3px var(--ff7-cursor-blue));
     image-rendering: pixelated;
@@ -1315,12 +1486,12 @@ select.ff7-keyboard-focus {
     image-rendering: crisp-edges;
 }
 
-/* Hide default focus outlines when using keyboard navigation */
+
 .ff7-keyboard-focus:focus {
     outline: none !important;
 }
 
-/* Keyboard navigation instructions */
+
 .ff7-keyboard-help {
     position: fixed;
     bottom: 10px;
@@ -1345,7 +1516,7 @@ select.ff7-keyboard-focus {
     line-height: 1.2;
 }
 
-/* Audio settings */
+
 .ff7-audio-toggle {
     position: fixed;
     top: 10px;
