@@ -4,6 +4,7 @@
   "description": "A webshop built with HTML, CSS, JavaScript and JSON Server",
   "main": "index.html",
   "scripts": {
+    "build": "echo 'No build step required for this project'",
     "start": "node index.cjs",
     "dev": "node index.cjs",
     "backend": "json-server --watch db.json --port 3000"
