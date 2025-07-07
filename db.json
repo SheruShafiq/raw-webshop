@@ -339,32 +339,23 @@
       "expiresAt": "2025-07-10T09:00:00Z"
     },
     {
-      "id": "cart_FF7RMBUXXXX_1751879793838",
-      "userId": "FF7RMBUXXXX",
-      "items": [
-        {
-          "productId": "prod_buster_sword",
-          "variantId": "var_buster_steel",
-          "quantity": 1
-        }
-      ],
-      "createdAt": "2025-07-07T09:16:33.838Z",
-      "updatedAt": "2025-07-07T09:16:33.839Z",
-      "expiresAt": "2025-07-14T09:16:33.839Z"
-    },
-    {
-      "id": "cart_FF7RMBUXXXX_1751879801328",
+      "id": "cart_FF7RMBUXXXX_1751885728262",
       "userId": "FF7RMBUXXXX",
       "items": [
         {
           "productId": "prod_fire_materia",
           "variantId": "var_fire_base",
           "quantity": 1
+        },
+        {
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "quantity": 1
         }
       ],
-      "createdAt": "2025-07-07T09:16:41.328Z",
-      "updatedAt": "2025-07-07T09:16:41.328Z",
-      "expiresAt": "2025-07-14T09:16:41.328Z"
+      "createdAt": "2025-07-07T10:55:28.262Z",
+      "updatedAt": "2025-07-07T10:55:29.542Z",
+      "expiresAt": "2025-07-14T10:55:28.262Z"
     }
   ],
   "promotions": [
@@ -412,6 +403,104 @@
       ],
       "createdAt": "2023-10-01T12:00:00Z",
       "updatedAt": "2023-10-02T09:15:00Z"
+    },
+    {
+      "id": "ord_1751885719841",
+      "orderNumber": "2025-719841",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "shippingAddressId": null,
+      "billingAddressId": null,
+      "couponId": null,
+      "totals": {
+        "subtotalCents": 300000,
+        "discountCents": 0,
+        "taxCents": 0,
+        "shippingCents": 0,
+        "grandTotalCents": 300000
+      },
+      "Items": [
+        {
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "unitPriceCents": 200000,
+          "quantity": 1,
+          "subtotalCents": 200000
+        },
+        {
+          "productId": "prod_fire_materia",
+          "variantId": "var_fire_base",
+          "unitPriceCents": 50000,
+          "quantity": 2,
+          "subtotalCents": 100000
+        }
+      ],
+      "createdAt": "2025-07-07T10:55:19.841Z",
+      "updatedAt": "2025-07-07T10:55:19.841Z"
+    },
+    {
+      "id": "ord_1751885725381",
+      "orderNumber": "2025-725381",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "shippingAddressId": null,
+      "billingAddressId": null,
+      "couponId": null,
+      "totals": {
+        "subtotalCents": 50000,
+        "discountCents": 0,
+        "taxCents": 0,
+        "shippingCents": 0,
+        "grandTotalCents": 50000
+      },
+      "Items": [
+        {
+          "productId": "prod_fire_materia",
+          "variantId": "var_fire_base",
+          "unitPriceCents": 50000,
+          "quantity": 1,
+          "subtotalCents": 50000
+        }
+      ],
+      "createdAt": "2025-07-07T10:55:25.381Z",
+      "updatedAt": "2025-07-07T10:55:25.381Z"
+    },
+    {
+      "id": "ord_1751885733186",
+      "orderNumber": "2025-733186",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "shippingAddressId": null,
+      "billingAddressId": null,
+      "couponId": null,
+      "totals": {
+        "subtotalCents": 250000,
+        "discountCents": 0,
+        "taxCents": 0,
+        "shippingCents": 0,
+        "grandTotalCents": 250000
+      },
+      "Items": [
+        {
+          "productId": "prod_fire_materia",
+          "variantId": "var_fire_base",
+          "unitPriceCents": 50000,
+          "quantity": 1,
+          "subtotalCents": 50000
+        },
+        {
+          "productId": "prod_buster_sword",
+          "variantId": "var_buster_steel",
+          "unitPriceCents": 200000,
+          "quantity": 1,
+          "subtotalCents": 200000
+        }
+      ],
+      "createdAt": "2025-07-07T10:55:33.186Z",
+      "updatedAt": "2025-07-07T10:55:33.186Z"
     }
   ]
 }

@@ -1,6 +1,23 @@
 const API_BASE_URL = 'http://localhost:3000';
 
 
+function waitForAuth() {
+    return new Promise((resolve) => {
+        
+        if (typeof window.authSystem === 'undefined') {
+            const checkAuth = setInterval(() => {
+                if (typeof window.authSystem !== 'undefined') {
+                    clearInterval(checkAuth);
+                    resolve();
+                }
+            }, 50);
+        } else {
+            resolve();
+        }
+    });
+}
+
+
 function getAssetPath(assetPath) {
     const currentPath = window.location.pathname;
     const isInSubfolder = currentPath.includes('/pages/');
@@ -22,7 +39,7 @@ function getAssetUrl(assetPath) {
     return `${baseUrl}${basePath}/assets/${assetPath}`;
 }
 
-// Add utility to build page paths for navigation
+
 function getPagePath(page) {
     const path = window.location.pathname;
     const base = path.includes('/pages/')
@@ -31,23 +48,38 @@ function getPagePath(page) {
     return `${base}/pages/${page}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname;
-    const urlParams = new URLSearchParams(window.location.search);
-
-    console.log('Current page:', currentPage);
-    console.log('URL params:', urlParams.toString());
-    console.log('Product ID from URL:', urlParams.get('id'));
-
-    // Initialize cart
-    initializeCart();
+document.addEventListener('DOMContentLoaded', async () => {
     
-    // Setup cart link
+    await waitForAuth();
+    
+    const currentPage = window.location.pathname;
+
+    
+    
+    
+    
+
+    
+    await initializeCart();
+    
+    
+    updateCartUI();
+    
+    
     const cartLink = document.getElementById('cart-link');
     if (cartLink) {
         cartLink.addEventListener('click', (e) => {
             e.preventDefault();
             window.location.href = getPagePath('cart.html');
+        });
+    }
+    
+    
+    const wishlistLink = document.getElementById('wishlist-link');
+    if (wishlistLink) {
+        wishlistLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = getPagePath('wishlist.html');
         });
     }
 
@@ -56,7 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (currentPage.includes('index.html') || currentPage === '/' || currentPage.endsWith('/')) {
         loadProducts();
     } else if (currentPage.includes('cart.html')) {
+        
+        await initializeCart(); 
         loadCartPage();
+    } else if (currentPage.includes('wishlist.html')) {
+        loadWishlistPage();
     }
 });
 
@@ -75,11 +111,14 @@ async function fetchProducts() {
 
 async function fetchProduct(productId) {
     try {
+        
         const response = await fetch(`${API_BASE_URL}/products/${productId}`);
         if (!response.ok) {
-            throw new Error('Failed to fetch product');
+            throw new Error(`Failed to fetch product. Status: ${response.status}`);
         }
-        return await response.json();
+        const product = await response.json();
+        
+        return product;
     } catch (error) {
         console.error('Error fetching product:', error);
         return null;
@@ -105,7 +144,7 @@ function createProductCard(product) {
                 <div class="product-price">€${price}</div>
                 <div class="product-actions">
                     <button class="btn btn-primary view-details-btn" data-product-id="${product.id}">View Details</button>
-                    <button onclick="addToCart('${product.id}', '${mainVariant.id}')" class="btn btn-secondary">Add to Cart</button>
+                    <button class="btn btn-secondary add-to-cart-btn" data-product-id="${product.id}" data-variant-id="${mainVariant.id}">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -125,23 +164,34 @@ async function loadProducts() {
 
     container.innerHTML = products.map(product => createProductCard(product)).join('');
 
-
+    
     document.querySelectorAll('.view-details-btn').forEach(button => {
         button.addEventListener('click', (e) => {
             const productId = e.target.getAttribute('data-product-id');
             viewProduct(productId);
         });
     });
+
+    
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const productId = e.target.getAttribute('data-product-id');
+            const variantId = e.target.getAttribute('data-variant-id');
+            
+            await addToCart(productId, variantId);
+        });
+    });
 }
 
 function viewProduct(productId) {
-    console.log('Navigating to product:', productId);
+    
 
 
     const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '');
     const targetUrl = `${baseUrl}pages/product.html?id=${productId}`;
 
-    console.log('Target URL:', targetUrl);
+    
 
     window.location.href = targetUrl;
 }
@@ -150,9 +200,9 @@ async function loadProductDetail() {
     const urlParams = new URLSearchParams(window.location.search);
     const productId = urlParams.get('id');
 
-    console.log('Current URL:', window.location.href);
-    console.log('URL Search params:', window.location.search);
-    console.log('Extracted product ID:', productId);
+    
+    
+    
 
     const container = document.getElementById('product-detail-container');
 
@@ -171,9 +221,9 @@ async function loadProductDetail() {
     container.innerHTML = '<p>Loading product details...</p>';
 
     try {
-        console.log('Fetching product with ID:', productId);
+        
         const product = await fetchProduct(productId);
-        console.log('Fetched product data:', product);
+        
 
         if (!product) {
             console.error('Product not found for ID:', productId);
@@ -181,9 +231,30 @@ async function loadProductDetail() {
             return;
         }
 
-        console.log('Creating product detail HTML');
+        
         container.innerHTML = createProductDetail(product);
-        console.log('Product detail HTML created successfully');
+        
+        
+        
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const productId = e.target.getAttribute('data-product-id');
+                const variantId = e.target.getAttribute('data-variant-id');
+                
+                await addToCart(productId, variantId);
+            });
+        });
+
+        
+        document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const productId = e.target.getAttribute('data-product-id');
+                
+                await addToWishlist(productId);
+            });
+        });
     } catch (error) {
         console.error('Error loading product detail:', error);
         container.innerHTML = '<p>Error loading product details. Please try again. Error: ' + error.message + '</p>';
@@ -191,7 +262,7 @@ async function loadProductDetail() {
 }
 
 function createProductDetail(product) {
-    console.log('Creating product detail for:', product);
+    
 
 
     const variants = product.variants && product.variants.length > 0
@@ -210,8 +281,8 @@ function createProductDetail(product) {
                     <p class="variant-dimensions">Dimensions: ${dimensions}</p>
                     <p class="variant-weight">Weight: ${weight}</p>
                     <div class="variant-actions">
-                        <button onclick="addToCart('${product.id}', '${variant.id}')" class="btn btn-primary">Add to Cart</button>
-                        <button onclick="addToWishlist('${product.id}')" class="btn btn-secondary">Add to Wishlist</button>
+                        <button class="btn btn-primary add-to-cart-btn" data-product-id="${product.id}" data-variant-id="${variant.id}">Add to Cart</button>
+                        <button class="btn btn-secondary add-to-wishlist-btn" data-product-id="${product.id}">Add to Wishlist</button>
                     </div>
                 </div>
             `;
@@ -261,54 +332,94 @@ function createProductDetail(product) {
 }
 
 
-// Cart Management
+
 let currentCart = null;
 
 async function initializeCart() {
-    if (currentUser) {
-        // Get user's cart
+    
+    
+    if (window.currentUser) {
+        
         try {
-            const response = await fetch(`${API_BASE_URL}/carts?userId=${currentUser.id}`);
+            
+            const response = await fetch(`${API_BASE_URL}/carts?userId=${window.currentUser.id}`);
             const carts = await response.json();
-            currentCart = carts.find(cart => cart.userId === currentUser.id) || null;
+            currentCart = carts.find(cart => cart.userId === window.currentUser.id) || null;
+            
         } catch (error) {
             console.error('Error loading cart:', error);
         }
     } else {
-        // For guest users, use localStorage
+        
+        
         const guestCart = localStorage.getItem('guestCart');
         if (guestCart) {
             currentCart = JSON.parse(guestCart);
+            
+        } else {
+            
+            
+            currentCart = {
+                id: `guest_cart_${Date.now()}`,
+                userId: null,
+                items: [],
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            localStorage.setItem('guestCart', JSON.stringify(currentCart));
         }
     }
+    
+    
+    updateCartUI();
 }
 
 async function addToCart(productId, variantId, quantity = 1) {
-    console.log('Adding to cart:', productId, variantId, quantity);
+    
+    
 
     try {
-        if (currentUser) {
-            // Authenticated user - save to database
+        
+        if (currentCart === null) {
+            
+            await initializeCart();
+        }
+        
+        
+        
+        
+        if (window.currentUser) {
+            
+            
             await addToUserCart(productId, variantId, quantity);
         } else {
-            // Guest user - save to localStorage
+            
+            
             addToGuestCart(productId, variantId, quantity);
         }
         
         showMessage('Product added to cart!', 'success');
         updateCartUI();
+        
+        
+        if (window.location.pathname.includes('cart.html')) {
+            loadCartPage();
+        }
     } catch (error) {
         console.error('Error adding to cart:', error);
-        showMessage('Failed to add product to cart.', 'error');
+        showMessage('Failed to add product to cart. Please try again.', 'error');
+        
+        return false;
     }
 }
 
 async function addToUserCart(productId, variantId, quantity) {
     if (!currentCart) {
-        // Create new cart
+        
         const newCart = {
-            id: `cart_${currentUser.id}_${Date.now()}`,
-            userId: currentUser.id,
+            id: `cart_${window.currentUser.id}_${Date.now()}`,
+            userId: window.currentUser.id,
             items: [{
                 productId: productId,
                 variantId: variantId,
@@ -316,7 +427,7 @@ async function addToUserCart(productId, variantId, quantity) {
             }],
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
+            expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() 
         };
         
         const response = await fetch(`${API_BASE_URL}/carts`, {
@@ -329,7 +440,7 @@ async function addToUserCart(productId, variantId, quantity) {
             currentCart = newCart;
         }
     } else {
-        // Update existing cart
+        
         const existingItem = currentCart.items.find(item => 
             item.productId === productId && item.variantId === variantId
         );
@@ -392,7 +503,7 @@ async function removeFromCart(productId, variantId) {
     );
     
     try {
-        if (currentUser) {
+        if (window.currentUser) {
             await fetch(`${API_BASE_URL}/carts/${currentCart.id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -427,7 +538,7 @@ async function updateCartItemQuantity(productId, variantId, newQuantity) {
         currentCart.updatedAt = new Date().toISOString();
         
         try {
-            if (currentUser) {
+            if (window.currentUser) {
                 await fetch(`${API_BASE_URL}/carts/${currentCart.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -454,21 +565,21 @@ function updateCartUI() {
 }
 
 async function addToWishlist(productId) {
-    if (!currentUser) {
+    if (!window.currentUser) {
         showMessage('Please login to add items to wishlist', 'error');
         return;
     }
     
     try {
-        // Check if wishlist exists for user
-        const response = await fetch(`${API_BASE_URL}/wishlists?userId=${currentUser.id}`);
+        
+        const response = await fetch(`${API_BASE_URL}/wishlists?userId=${window.currentUser.id}`);
         const wishlists = await response.json();
         let wishlist = wishlists[0];
         
         if (!wishlist) {
-            // Create new wishlist
+            
             wishlist = {
-                userId: currentUser.id,
+                userId: window.currentUser.id,
                 productIds: [productId],
                 addedAt: new Date().toISOString()
             };
@@ -479,11 +590,11 @@ async function addToWishlist(productId) {
                 body: JSON.stringify(wishlist)
             });
         } else {
-            // Update existing wishlist
+            
             if (!wishlist.productIds.includes(productId)) {
                 wishlist.productIds.push(productId);
                 
-                await fetch(`${API_BASE_URL}/wishlists/${wishlist.id || currentUser.id}`, {
+                await fetch(`${API_BASE_URL}/wishlists/${wishlist.id || window.currentUser.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(wishlist)
@@ -501,14 +612,14 @@ async function addToWishlist(productId) {
     }
 }
 
-// Order Management
+
 async function createOrder(orderData) {
     try {
         const order = {
             id: `ord_${Date.now()}`,
             orderNumber: `2025-${String(Date.now()).slice(-6)}`,
-            userId: currentUser ? currentUser.id : null,
-            statusId: 1, // Pending
+            userId: window.currentUser ? window.currentUser.id : null,
+            statusId: 1, 
             currency: 'EUR',
             shippingAddressId: orderData.shippingAddressId,
             billingAddressId: orderData.billingAddressId,
@@ -526,7 +637,7 @@ async function createOrder(orderData) {
         });
         
         if (response.ok) {
-            // Clear cart after successful order
+            
             await clearCart();
             return order;
         } else {
@@ -542,13 +653,13 @@ async function clearCart() {
     if (!currentCart) return;
     
     try {
-        if (currentUser) {
-            // Delete cart from database
+        if (window.currentUser) {
+            
             await fetch(`${API_BASE_URL}/carts/${currentCart.id}`, {
                 method: 'DELETE'
             });
         } else {
-            // Clear guest cart from localStorage
+            
             localStorage.removeItem('guestCart');
         }
         
@@ -559,49 +670,205 @@ async function clearCart() {
     }
 }
 
-// Load and display the cart page
+
 async function loadCartPage() {
     const container = document.getElementById('cart-container');
-    if (!container) return;
-    if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
-        container.innerHTML = '<p>Your cart is empty.</p>';
+    if (!container) {
+        console.error('Cart container not found!');
         return;
     }
-    let itemsHtml = '';
-    let subtotal = 0;
-    for (const item of currentCart.items) {
-        const product = await fetchProduct(item.productId);
-        const variant = product.variants.find(v => v.id === item.variantId);
-        const unitPrice = variant.priceCents;
-        const lineTotal = unitPrice * item.quantity;
-        subtotal += lineTotal;
-        itemsHtml += `
-            <tr>
-                <td>${product.name}</td>
-                <td>${variant.name}</td>
-                <td>€${(unitPrice/100).toFixed(2)}</td>
-                <td>${item.quantity}</td>
-                <td>€${(lineTotal/100).toFixed(2)}</td>
-            </tr>`;
+    
+    
+    
+    
+    if (!currentCart) {
+        
+        await initializeCart();
     }
-    const grandTotal = subtotal;
-    container.innerHTML = `
-        <table>
-            <thead>
-                <tr><th>Product</th><th>Variant</th><th>Unit Price</th><th>Quantity</th><th>Total</th></tr>
-            </thead>
-            <tbody>${itemsHtml}</tbody>
-        </table>
-        <p><strong>Grand Total:</strong> €${(grandTotal/100).toFixed(2)}</p>
-        <button id="checkout-btn" class="btn btn-primary">Checkout</button>
-    `;
-    document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
+    
+    if (!currentCart || !currentCart.items || currentCart.items.length === 0) {
+        
+        container.innerHTML = `
+            <p>Your cart is empty.</p>
+            <div class="cart-actions">
+                <a href="../index.html" class="btn btn-primary">Continue Shopping</a>
+            </div>
+        `;
+        return;
+    }
+    
+    
+    
+    try {
+        let itemsHtml = '';
+        let subtotal = 0;
+        
+        for (const item of currentCart.items) {
+            
+            const product = await fetchProduct(item.productId);
+            
+            if (!product) {
+                console.error('Product not found for ID:', item.productId);
+                continue;
+            }
+            
+            const variant = product.variants.find(v => v.id === item.variantId);
+            
+            if (!variant) {
+                console.error('Variant not found:', item.variantId);
+                continue;
+            }
+            
+            const unitPrice = variant.priceCents;
+            const lineTotal = unitPrice * item.quantity;
+            subtotal += lineTotal;
+            
+            itemsHtml += `
+                <tr data-product-id="${item.productId}" data-variant-id="${item.variantId}">
+                    <td>${product.name}</td>
+                    <td>${variant.name}</td>
+                    <td>€${(unitPrice/100).toFixed(2)}</td>
+                    <td>
+                        <div class="quantity-control">
+                            <button class="quantity-btn decrease-btn">-</button>
+                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="99">
+                            <button class="quantity-btn increase-btn">+</button>
+                        </div>
+                    </td>
+                    <td>€${(lineTotal/100).toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-outline remove-item-btn">Remove</button>
+                    </td>
+                </tr>`;
+        }
+        
+        const grandTotal = subtotal;
+        
+        container.innerHTML = `
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Variant</th>
+                        <th>Unit Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>${itemsHtml}</tbody>
+            </table>
+            <div class="cart-summary">
+                <p><strong>Grand Total:</strong> €${(grandTotal/100).toFixed(2)}</p>
+                <div class="cart-actions">
+                    <button id="clear-cart-btn" class="btn btn-outline">Clear Cart</button>
+                    <button id="checkout-btn" class="btn btn-primary">Checkout</button>
+                </div>
+            </div>
+        `;
+        
+        
+        setupCartEventListeners();
+        
+    } catch (error) {
+        console.error('Error loading cart page:', error);
+        container.innerHTML = `<p>Error loading cart: ${error.message}</p>`;
+    }
 }
 
-// Handle the checkout process by creating an order
+
+
+function setupCartEventListeners() {
+    
+    
+    
+    document.querySelectorAll('.quantity-control .quantity-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const row = e.target.closest('tr');
+            const productId = row.dataset.productId;
+            const variantId = row.dataset.variantId;
+            const input = row.querySelector('.quantity-input');
+            let currentQty = parseInt(input.value, 10);
+            
+            if (e.target.classList.contains('decrease-btn')) {
+                currentQty = Math.max(1, currentQty - 1);
+            } else if (e.target.classList.contains('increase-btn')) {
+                currentQty = Math.min(99, currentQty + 1);
+            }
+            
+            
+            input.value = currentQty;
+            updateCartItemQuantity(productId, variantId, currentQty);
+        });
+    });
+    
+    
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+            const row = e.target.closest('tr');
+            const productId = row.dataset.productId;
+            const variantId = row.dataset.variantId;
+            let newQty = parseInt(e.target.value, 10);
+            
+            
+            if (isNaN(newQty) || newQty < 1) {
+                newQty = 1;
+                e.target.value = 1;
+            } else if (newQty > 99) {
+                newQty = 99;
+                e.target.value = 99;
+            }
+            
+            
+            updateCartItemQuantity(productId, variantId, newQty);
+        });
+    });
+    
+    
+    document.querySelectorAll('.remove-item-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const row = e.target.closest('tr');
+            const productId = row.dataset.productId;
+            const variantId = row.dataset.variantId;
+            
+            
+            removeFromCart(productId, variantId).then(() => {
+                loadCartPage(); 
+            });
+        });
+    });
+    
+    
+    const clearCartBtn = document.getElementById('clear-cart-btn');
+    if (clearCartBtn) {
+        clearCartBtn.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                
+                await clearCart();
+                loadCartPage(); 
+            }
+        });
+    } else {
+        console.warn('Clear cart button not found');
+    }
+    
+    
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', (e) => {
+            
+            handleCheckout();
+        });
+    } else {
+        console.warn('Checkout button not found');
+    }
+    
+    
+}
+
 async function handleCheckout() {
     try {
-        if (!currentUser) {
+        if (!window.currentUser) {
             showMessage('Please login to place an order.', 'error');
             setTimeout(() => window.location.href = getPagePath('login.html'), 1000);
             return;
@@ -632,9 +899,9 @@ async function handleCheckout() {
     }
 }
 
-// Utility function for showing messages
+
 function showMessage(message, type = 'info') {
-    // Create message element if it doesn't exist
+    
     let messageEl = document.getElementById('global-message');
     if (!messageEl) {
         messageEl = document.createElement('div');
@@ -647,7 +914,7 @@ function showMessage(message, type = 'info') {
     messageEl.className = `global-message ${type}`;
     messageEl.style.display = 'block';
     
-    // Auto-hide after 3 seconds
+    
     setTimeout(() => {
         messageEl.style.display = 'none';
     }, 3000);
@@ -659,22 +926,22 @@ function showMessage(message, type = 'info') {
 
 
 
-// script.js
+
 async function loadWishlistPage() {
   const container = document.getElementById('wishlist-container');
   if (!container) return;
-  if (!currentUser) {
+  if (!window.currentUser) {
     container.innerHTML = '<p>Please log in to view your wishlist.</p>';
     return;
   }
   try {
-    const res = await fetch(`${API_BASE_URL}/wishlists?userId=${currentUser.id}`);
+    const res = await fetch(`${API_BASE_URL}/wishlists?userId=${window.currentUser.id}`);
     const [wishlist] = await res.json();
     if (!wishlist || wishlist.productIds.length === 0) {
       container.innerHTML = '<p>Your wishlist is empty.</p>';
       return;
     }
-    // Fetch and display each product in the wishlist
+    
     let itemsHtml = '';
     for (const prodId of wishlist.productIds) {
       const product = await fetchProduct(prodId);
@@ -695,11 +962,11 @@ async function loadWishlistPage() {
 
 async function removeFromWishlist(productId) {
   try {
-    // Get the user's current wishlist entry
-    const res = await fetch(`${API_BASE_URL}/wishlists?userId=${currentUser.id}`);
+    
+    const res = await fetch(`${API_BASE_URL}/wishlists?userId=${window.currentUser.id}`);
     const [wishlist] = await res.json();
     if (!wishlist) return;
-    // Remove the product from the array and update the server
+    
     wishlist.productIds = wishlist.productIds.filter(id => id !== productId);
     await fetch(`${API_BASE_URL}/wishlists/${wishlist.id}`, {
       method: 'PUT',
@@ -707,7 +974,7 @@ async function removeFromWishlist(productId) {
       body: JSON.stringify(wishlist)
     });
     showMessage('Product removed from wishlist.', 'success');
-    loadWishlistPage();  // refresh the displayed list
+    loadWishlistPage();  
   } catch (error) {
     console.error('Error removing from wishlist:', error);
     showMessage('Could not remove item from wishlist.', 'error');

@@ -1,52 +1,53 @@
-// Authentication system for Wall Market Online
+
 const AUTH_API_BASE_URL = 'http://localhost:3000';
 
-// Current user state
+
+window.currentUser = null;
 let currentUser = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize authentication
+    
     initializeAuth();
     
-    // Check if user is logged in
+    
     checkUserSession();
     
-    // Setup auth event listeners
+    
     setupAuthEventListeners();
     
-    // Update navigation based on user state
+    
     updateNavigation();
 });
 
 function initializeAuth() {
-    // Load user from localStorage if exists
+    
     const storedUser = localStorage.getItem('wallMarketUser');
     if (storedUser) {
         currentUser = JSON.parse(storedUser);
-        console.log('Loaded user from storage:', currentUser);
+        window.currentUser = currentUser;
     }
 }
 
 function setupAuthEventListeners() {
-    // Login form
+    
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
     
-    // Register form
+    
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
     }
     
-    // Logout button
+    
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
     
-    // Profile link
+    
     document.addEventListener('click', (e) => {
         if (e.target.id === 'profile-link') {
             e.preventDefault();
@@ -84,28 +85,29 @@ async function handleLogin(e) {
     const password = formData.get('password');
     
     try {
-        // Fetch users to find matching email and password
+        
         const response = await fetch(`${AUTH_API_BASE_URL}/users`);
         const users = await response.json();
         
         const user = users.find(u => u.email === email && u.password === password && !u.deletedAt);
         
         if (user) {
-            // Fetch user role
+            
             const roleResponse = await fetch(`${AUTH_API_BASE_URL}/roles/${user.roleId}`);
             const role = await roleResponse.json();
             
-            // Store user with role information
+            
             currentUser = {
                 ...user,
                 role: role
             };
+            window.currentUser = currentUser;
             
             localStorage.setItem('wallMarketUser', JSON.stringify(currentUser));
             
             showAuthMessage('Login successful! Redirecting...', 'success');
             
-            // Redirect to home page after short delay
+            
             setTimeout(() => {
                 window.location.href = '../index.html';
             }, 1500);
@@ -128,20 +130,20 @@ async function handleRegister(e) {
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
     
-    // Validate passwords match
+    
     if (password !== confirmPassword) {
         showAuthMessage('Passwords do not match.', 'error');
         return;
     }
     
-    // Validate password length
+    
     if (password.length < 6) {
         showAuthMessage('Password must be at least 6 characters long.', 'error');
         return;
     }
     
     try {
-        // Check if email already exists
+        
         const response = await fetch(`${AUTH_API_BASE_URL}/users`);
         const users = await response.json();
         
@@ -150,13 +152,13 @@ async function handleRegister(e) {
             return;
         }
         
-        // Create new user
+        
         const newUser = {
             id: `USER_${Date.now()}`,
             displayName: displayName,
             email: email,
-            password: password, // In production, this should be hashed
-            roleId: 1, // Default to User role
+            password: password, 
+            roleId: 1, 
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             deletedAt: null
@@ -185,9 +187,10 @@ async function handleRegister(e) {
 
 function handleLogout() {
     currentUser = null;
+    window.currentUser = null;
     localStorage.removeItem('wallMarketUser');
     
-    // Redirect to home page
+    
     window.location.href = '../index.html';
 }
 
@@ -235,12 +238,12 @@ function updateNavigation() {
     const nav = document.querySelector('nav');
     if (!nav) return;
     
-    // Remove existing auth links
+    
     const existingAuthLinks = nav.querySelectorAll('.auth-link');
     existingAuthLinks.forEach(link => link.remove());
     
     if (currentUser) {
-        // User is logged in
+        
         const profileLink = document.createElement('a');
         profileLink.href = '#';
         profileLink.id = 'profile-link';
@@ -248,7 +251,7 @@ function updateNavigation() {
         profileLink.textContent = `Welcome, ${currentUser.displayName}`;
         nav.appendChild(profileLink);
         
-        // Show admin link if user is admin
+        
         if (currentUser.role && currentUser.role.name === 'Admin') {
             const adminLink = document.createElement('a');
             adminLink.href = '#';
@@ -259,7 +262,7 @@ function updateNavigation() {
         }
         
     } else {
-        // User is not logged in
+        
         const loginLink = document.createElement('a');
         loginLink.href = '#';
         loginLink.id = 'login-link';
@@ -270,14 +273,14 @@ function updateNavigation() {
 }
 
 function checkUserSession() {
-    // Update navigation and load profile if on profile page
+    
     updateNavigation();
     
     if (window.location.pathname.includes('profile.html')) {
         loadUserProfile();
     }
     
-    // Redirect to login if trying to access protected pages
+    
     if (window.location.pathname.includes('admin.html') && (!currentUser || currentUser.role.name !== 'Admin')) {
         alert('Access denied. Admin privileges required.');
         window.location.href = getPagePath('login.html');
@@ -289,7 +292,7 @@ async function loadUserProfile() {
     if (!profileContent || !currentUser) return;
     
     try {
-        // Fetch user profile data
+        
         const profileResponse = await fetch(`${AUTH_API_BASE_URL}/userProfiles?userId=${currentUser.id}`);
         const profiles = await profileResponse.json();
         const profile = profiles[0];
@@ -325,7 +328,7 @@ async function loadUserProfile() {
     }
 }
 
-// Utility functions
+
 function isLoggedIn() {
     return currentUser !== null;
 }
@@ -338,7 +341,7 @@ function getCurrentUser() {
     return currentUser;
 }
 
-// Export functions for use in other scripts
+
 window.authSystem = {
     isLoggedIn,
     isAdmin,
