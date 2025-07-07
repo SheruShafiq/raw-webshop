@@ -418,6 +418,30 @@
       ],
       "createdAt": "2025-07-07T14:52:12.815Z",
       "updatedAt": "2025-07-07T14:52:12.815Z"
+    },
+    {
+      "id": "ord_1751899987698",
+      "orderNumber": "2025-987698",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 650,
+      "items": [
+        {
+          "productId": "prod_fire_materia",
+          "unitPrice": 500,
+          "quantity": 1,
+          "subtotal": 500
+        },
+        {
+          "productId": "prod_potion",
+          "unitPrice": 150,
+          "quantity": 1,
+          "subtotal": 150
+        }
+      ],
+      "createdAt": "2025-07-07T14:53:07.698Z",
+      "updatedAt": "2025-07-07T14:53:07.698Z"
     }
   ]
 }
