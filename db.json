@@ -400,6 +400,24 @@
       ],
       "createdAt": "2025-07-07T14:47:02.073Z",
       "updatedAt": "2025-07-07T14:47:02.073Z"
+    },
+    {
+      "id": "ord_1751899932815",
+      "orderNumber": "2025-932815",
+      "userId": "FF7RMBUXXXX",
+      "statusId": 1,
+      "currency": "EUR",
+      "total": 4000,
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "unitPrice": 2000,
+          "quantity": 2,
+          "subtotal": 4000
+        }
+      ],
+      "createdAt": "2025-07-07T14:52:12.815Z",
+      "updatedAt": "2025-07-07T14:52:12.815Z"
     }
   ]
 }
