@@ -1,5 +1,5 @@
 
-const AUTH_API_BASE_URL = 'http://localhost:3000';
+const AUTH_API_BASE_URL = '/api';
 
 
 window.currentUser = null;
@@ -335,17 +335,17 @@ async function loadUserProfile() {
     if (!profileContent || !window.currentUser) return;
     
     try {
-        // Load user profile data
+        
         const profileResponse = await fetch(`${AUTH_API_BASE_URL}/userProfiles?userId=${window.currentUser.id}`);
         const profiles = await profileResponse.json();
         const profile = profiles[0];
         
-        // Load user orders
+        
         const ordersResponse = await fetch(`${AUTH_API_BASE_URL}/orders?userId=${window.currentUser.id}`);
         const orders = await ordersResponse.json();
         const sortedOrders = orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         
-        // Load statuses for orders
+        
         const statusesResponse = await fetch(`${AUTH_API_BASE_URL}/statuses`);
         const statuses = await statusesResponse.json();
         const statusMap = {};
@@ -353,7 +353,7 @@ async function loadUserProfile() {
             statusMap[status.id] = status.name;
         });
         
-        // Load products for order details
+        
         const productsResponse = await fetch(`${AUTH_API_BASE_URL}/products`);
         const products = await productsResponse.json();
         const productMap = {};

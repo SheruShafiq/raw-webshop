@@ -1,4 +1,4 @@
-const ADMIN_API_BASE_URL = 'http://localhost:3000';
+const ADMIN_API_BASE_URL = '/api';
 
 let currentEditingProduct = null;
 let currentEditingCategory = null;

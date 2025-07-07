@@ -41,8 +41,28 @@ Except the following regions:
 
 ## Installation:
 1) ```npm install```
-2) ```npm run dev``` will start the server and the client
-3)  PROD: ```still needs to be done```
+2) ```npm start``` will start the combined server (serves both frontend and API)
+3) For development: ```npm run dev``` (same as start)
+4) Legacy backend only: ```npm run backend``` (json-server only)
+
+## Deployment on Render:
+1. Push your code to GitHub
+2. Connect your GitHub repo to Render
+3. Set the build command to: `npm install`
+4. Set the start command to: `npm start`
+5. Set environment variables in Render dashboard:
+   - `GITHUB_SYNC=false` (or true if you want GitHub sync)
+   - `GITHUB_TOKEN=your_token` (only if GITHUB_SYNC=true)
+   - `DB_NAME=db.json`
+   - `FRONTEND_URL=*`
+6. Deploy and your app will be live!
+
+## Environment Variables:
+- `PORT`: Server port (automatically set by Render)
+- `GITHUB_SYNC`: Enable/disable GitHub database sync (true/false)
+- `GITHUB_TOKEN`: GitHub personal access token (only needed if GITHUB_SYNC=true)
+- `DB_NAME`: Database file name (default: db.json)
+- `FRONTEND_URL`: CORS allowed origin (use * for production or specific domain)
 
 
 
