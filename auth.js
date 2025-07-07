@@ -29,12 +29,12 @@ function initializeAuth() {
 }
 
 function setupAuthEventListeners() {
-    // Login form
+    
     const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
         
-        // Add sound effects to form inputs
+        
         const inputs = loginForm.querySelectorAll('input');
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
@@ -43,12 +43,12 @@ function setupAuthEventListeners() {
         });
     }
     
-    // Register form
+    
     const registerForm = document.getElementById('register-form');
     if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
         
-        // Add sound effects to form inputs
+        
         const inputs = registerForm.querySelectorAll('input');
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
@@ -57,13 +57,13 @@ function setupAuthEventListeners() {
         });
     }
     
-    // Logout button
+    
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleLogout);
     }
     
-    // Navigation event handlers
+    
     document.addEventListener('click', (e) => {
         if (e.target.id === 'profile-link') {
             e.preventDefault();

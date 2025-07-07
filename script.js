@@ -24,7 +24,7 @@ function getPagePath(page) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Show FF7 loading screen
+    
     showFF7LoadingScreen();
     
     await waitForAuth();
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateCartUI();
     
     
-    // Initialize audio toggle
+    
     initializeAudioToggle();
     
     const cartLink = document.getElementById('cart-link');
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-    // Hide loading screen after everything is loaded
+    
     setTimeout(() => {
         hideFF7LoadingScreen();
     }, 1500);
@@ -177,7 +177,7 @@ function setupProductSearch(products) {
     let typingTimeout;
     
     searchInput.addEventListener('input', (e) => {
-        // Play typing sound (throttled)
+        
         clearTimeout(typingTimeout);
         playFF7Sound('typing');
         
@@ -188,7 +188,7 @@ function setupProductSearch(products) {
             return;
         }
         
-        // Debounce search
+        
         typingTimeout = setTimeout(() => {
             const filteredProducts = products.filter(product => 
                 product.name.toLowerCase().includes(searchTerm) ||
@@ -205,7 +205,7 @@ function setupProductSearch(products) {
         }, 300);
     });
     
-    // Add focus/blur sounds
+    
     searchInput.addEventListener('focus', () => {
         playFF7Sound('menu_select');
     });
@@ -872,7 +872,7 @@ function showPageTransition(text = 'Loading...') {
     transition.innerHTML = `<div class="ff7-transition-text">${text}</div>`;
     transition.classList.add('active');
     
-    // Play transition sound
+    
     playFF7Sound('transition');
     
     setTimeout(() => {
@@ -880,7 +880,7 @@ function showPageTransition(text = 'Loading...') {
     }, 800);
 }
 
-// FF7 Sound System with Real Audio Files
+
 const FF7_SOUNDS = {
     menu_select: 'sfx/confirmation_positive.wav',
     menu_cursor: 'sfx/deck_ui_navigation.wav', 
@@ -896,7 +896,7 @@ const FF7_SOUNDS = {
 };
 
 let audioContext = null;
-let soundVolume = 0.3; // Default volume
+let soundVolume = 0.3; 
 
 function initAudioContext() {
     if (!audioContext) {
@@ -913,16 +913,16 @@ async function playFF7Sound(soundType) {
             return;
         }
         
-        // Create audio element for simpler implementation
+        
         const audio = new Audio(soundPath);
         audio.volume = soundVolume;
         
-        // Handle browser autoplay policy
+        
         const playPromise = audio.play();
         if (playPromise !== undefined) {
             playPromise.catch(error => {
                 console.log("Audio autoplay prevented:", error);
-                // Show visual feedback if audio fails
+                
                 showSoundVisualFeedback(soundType);
             });
         }
@@ -952,15 +952,15 @@ function showSoundVisualFeedback(soundType) {
     }, 800);
 }
 
-// Initialize audio on first user interaction
+
 document.addEventListener('click', () => {
     initAudioContext();
 }, { once: true });
 
-// Make sound function globally available
+
 window.playFF7Sound = playFF7Sound;
 
-// Keyboard Navigation System
+
 let currentFocusIndex = 0;
 let isKeyboardMode = false;
 let focusableElements = [];
@@ -976,7 +976,7 @@ function updateFocusableElements() {
         nav a,
         [tabindex]:not([tabindex="-1"])
     `)).filter(el => {
-        // Filter out hidden elements
+        
         const style = window.getComputedStyle(el);
         return style.display !== 'none' && style.visibility !== 'hidden' && el.offsetParent !== null;
     });
@@ -1012,11 +1012,11 @@ function updateCursorPosition() {
         cursor.style.top = (rect.top + rect.height / 2 - 10) + 'px';
         cursor.style.display = 'block';
         
-        // Add focus styling
+        
         focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
         focusedElement.classList.add('ff7-keyboard-focus');
         
-        // Scroll into view if needed
+        
         focusedElement.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'nearest',
@@ -1030,14 +1030,14 @@ function hideFF7Cursor() {
     if (cursor) {
         cursor.style.display = 'none';
     }
-    // Remove all focus styling
+    
     focusableElements.forEach(el => el.classList.remove('ff7-keyboard-focus'));
     isKeyboardMode = false;
 }
 
-// Keyboard Event Handlers
+
 document.addEventListener('keydown', (e) => {
-    // Enable keyboard mode on arrow key press
+    
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
         
@@ -1069,7 +1069,7 @@ document.addEventListener('keydown', (e) => {
         updateCursorPosition();
     }
     
-    // Handle Enter/Space for activation
+    
     if ((e.key === 'Enter' || e.key === ' ') && isKeyboardMode && focusableElements[currentFocusIndex]) {
         e.preventDefault();
         const element = focusableElements[currentFocusIndex];
@@ -1087,21 +1087,21 @@ document.addEventListener('keydown', (e) => {
         }
     }
     
-    // Handle Escape to cancel
+    
     if (e.key === 'Escape' && isKeyboardMode) {
         playFF7Sound('menu_cancel');
         hideFF7Cursor();
     }
 });
 
-// Disable keyboard mode on mouse interaction
+
 document.addEventListener('mousemove', () => {
     if (isKeyboardMode) {
         hideFF7Cursor();
     }
 });
 
-// Update focusable elements when DOM changes
+
 const observer = new MutationObserver(() => {
     if (isKeyboardMode) {
         updateFocusableElements();
@@ -1118,7 +1118,7 @@ observer.observe(document.body, {
 
 
 
-// Initialize audio toggle
+
 function initializeAudioToggle() {
     const audioToggle = document.createElement('button');
     audioToggle.className = 'ff7-audio-toggle';
@@ -1132,11 +1132,11 @@ function initializeAudioToggle() {
         audioToggle.textContent = `♪ ${soundVolume > 0 ? 'ON' : 'OFF'}`;
         playFF7Sound('toggle_on');
         
-        // Save preference
+        
         localStorage.setItem('ff7_sound_enabled', soundVolume > 0);
     });
     
-    // Load saved preference
+    
     const savedSoundPreference = localStorage.getItem('ff7_sound_enabled');
     if (savedSoundPreference === 'false') {
         soundVolume = 0;
