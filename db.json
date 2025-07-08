@@ -224,6 +224,19 @@
       "updatedAt": "2025-07-07T16:43:33.615Z",
       "userId": "test_user_2",
       "items": []
+    },
+    {
+      "id": "cart_USER_1751900579536_1751965647064",
+      "userId": "USER_1751900579536",
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2025-07-08T09:07:27.064Z",
+      "updatedAt": "2025-07-08T09:07:27.064Z",
+      "expiresAt": "2025-07-15T09:07:27.064Z"
     }
   ],
   "orders": [
