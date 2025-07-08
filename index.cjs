@@ -27,13 +27,6 @@ const pendingSyncs = [];
 let lastContentHash = null;
 let periodicSyncInterval = null;
 
-function getLinkByRelFromLinkHeader(linkHeader, rel) {
-    if (linkHeader) {
-        const match = linkHeader.match(new RegExp("<([^>]+)>; rel=\"" + rel + "\""));
-        if (match) return match[1];
-    }
-    return null;
-}
 
 function getHash(content) {
     return crypto.createHash("sha1").update(content).digest("hex");

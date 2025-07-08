@@ -39,14 +39,8 @@ Except the following regions:
 - Serve
 - Concurrently
 
-https://wall-market-online.onrender.com/
-npm run start for local development
 
+## Usage:
+- Prod: https://wall-market-online.onrender.com/
+- Dev: `npm run dev` 
 
-TODO:
-- Sound effects
-- Keyboard navigation
-- Custom mouse
-- Styles correction
-- Better products setup
-- GIF based profiles
