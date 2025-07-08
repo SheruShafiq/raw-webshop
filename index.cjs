@@ -69,7 +69,7 @@ async function syncWithGitHub() {
     try {
         console.log("🔄 Starting bidirectional GitHub sync...");
         
-        // Get remote file info
+        
         const url = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" + GITHUB_FILE_PATH;
         const response = await fetch(url, { headers });
         
@@ -81,14 +81,14 @@ async function syncWithGitHub() {
         const remoteData = await response.json();
         const remoteContent = Buffer.from(remoteData.content, "base64").toString("utf-8");
         
-        // Get local file info
+        
         const localContent = fs.readFileSync(LOCAL_DB_PATH, "utf-8");
         const localStats = fs.statSync(LOCAL_DB_PATH);
         
-        // Parse remote modification time from commit data
+        
         let remoteModified;
         try {
-            // Try to get commit info for more accurate timestamp
+            
             const commitUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/commits?path=${GITHUB_FILE_PATH}&per_page=1`;
             const commitResponse = await fetch(commitUrl, { headers });
             if (commitResponse.ok) {
@@ -96,13 +96,13 @@ async function syncWithGitHub() {
                 if (commits.length > 0) {
                     remoteModified = new Date(commits[0].commit.committer.date);
                 } else {
-                    remoteModified = new Date(0); // Very old date if no commits
+                    remoteModified = new Date(0); 
                 }
             } else {
-                remoteModified = new Date(0); // Fallback
+                remoteModified = new Date(0); 
             }
         } catch (error) {
-            remoteModified = new Date(0); // Fallback on error
+            remoteModified = new Date(0); 
         }
         
         const localModified = localStats.mtime;
@@ -110,7 +110,7 @@ async function syncWithGitHub() {
         console.log(`📅 Remote modified: ${remoteModified.toISOString()}`);
         console.log(`📅 Local modified: ${localModified.toISOString()}`);
         
-        // Compare content hashes to avoid unnecessary syncs
+        
         const remoteHash = getHash(remoteContent);
         const localHash = getHash(localContent);
         
@@ -120,9 +120,9 @@ async function syncWithGitHub() {
             return;
         }
         
-        // Determine which version is newer
+        
         if (remoteModified > localModified) {
-            // Remote is newer - pull from GitHub
+            
             console.log("⬇️ Remote database is newer, pulling from GitHub...");
             
             try {
@@ -132,16 +132,16 @@ async function syncWithGitHub() {
                 return;
             }
             
-            // Create backup
+            
             const backupPath = LOCAL_DB_PATH + '.backup.' + Date.now();
             fs.copyFileSync(LOCAL_DB_PATH, backupPath);
             console.log(`📋 Created backup: ${path.basename(backupPath)}`);
             
-            // Update local file
+            
             fs.writeFileSync(LOCAL_DB_PATH, remoteContent);
             lastContentHash = remoteHash;
             
-            // Reload json-server
+            
             if (global.jsonServerRouter) {
                 global.jsonServerRouter.db.read();
                 console.log("🔄 Reloaded json-server database");
@@ -150,7 +150,7 @@ async function syncWithGitHub() {
             console.log("✅ Local database updated from GitHub");
             
         } else {
-            // Local is newer - push to GitHub
+            
             console.log("⬆️ Local database is newer, pushing to GitHub...");
             
             try {
@@ -181,7 +181,7 @@ async function syncWithGitHub() {
             }
         }
         
-        // Clean up old backups
+        
         try {
             const backupFiles = fs.readdirSync(__dirname)
                 .filter(file => file.startsWith('db.json.backup.'))
@@ -202,11 +202,11 @@ async function syncWithGitHub() {
     } finally {
         isGitHubSyncInProgress = false;
         
-        // Process any pending syncs
+        
         if (pendingSyncs.length > 0) {
             const latestContent = pendingSyncs.pop();
-            pendingSyncs.length = 0; // Clear all pending
-            setTimeout(() => syncWithGitHub(), 1000); // Retry after 1 second
+            pendingSyncs.length = 0; 
+            setTimeout(() => syncWithGitHub(), 1000); 
         }
     }
 }
@@ -276,7 +276,7 @@ async function initializeServer() {
         }
     }));
 
-    // Custom cart deletion middleware (bypass lodash-id issue)
+    
     app.use('/api/carts', (req, res, next) => {
         if (req.method === 'DELETE') {
             const cartId = req.params.id || req.url.split('/').pop();
@@ -387,7 +387,7 @@ async function initializeServer() {
             console.log("⚠️ GitHub sync is DISABLED (GITHUB_SYNC=false)");
         } else {
             console.log("🔄 GitHub sync is ENABLED");
-            // Start periodic bidirectional sync every 30 seconds
+            
             periodicSyncInterval = setInterval(async () => {
                 await syncWithGitHub();
             }, SYNC_INTERVAL * 1000); 
