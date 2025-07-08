@@ -36,11 +36,16 @@ Except the following regions:
 - CSS
 - JavaScript
 - JSON-Server
-- Serve
-- Concurrently
+- Render
+- A custom GitHub Sync script (a very own little app of mine)
 
 
 ## Usage:
 - Prod: https://wall-market-online.onrender.com/
 - Dev: `npm run dev` 
+
+
+## TODO:
+- Add one more product and maybe better images for pre existing products
+
 
