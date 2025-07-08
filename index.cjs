@@ -61,25 +61,69 @@ async function fetchRemoteDb() {
     return data.sha;
 }
 
-async function checkForRemoteUpdates() {
+async function syncWithGitHub() {
     if (!GITHUB_ENABLED || isGitHubSyncInProgress) return;
     
+    isGitHubSyncInProgress = true;
+    
     try {
+        console.log("🔄 Starting bidirectional GitHub sync...");
+        
+        // Get remote file info
         const url = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" + GITHUB_FILE_PATH;
         const response = await fetch(url, { headers });
+        
         if (!response.ok) {
-            console.log("⚠️ Could not check GitHub for updates:", response.statusText);
+            console.log("⚠️ Could not fetch remote database:", response.status, response.statusText);
+            return;
+        }
+
+        const remoteData = await response.json();
+        const remoteContent = Buffer.from(remoteData.content, "base64").toString("utf-8");
+        
+        // Get local file info
+        const localContent = fs.readFileSync(LOCAL_DB_PATH, "utf-8");
+        const localStats = fs.statSync(LOCAL_DB_PATH);
+        
+        // Parse remote modification time from commit data
+        let remoteModified;
+        try {
+            // Try to get commit info for more accurate timestamp
+            const commitUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/commits?path=${GITHUB_FILE_PATH}&per_page=1`;
+            const commitResponse = await fetch(commitUrl, { headers });
+            if (commitResponse.ok) {
+                const commits = await commitResponse.json();
+                if (commits.length > 0) {
+                    remoteModified = new Date(commits[0].commit.committer.date);
+                } else {
+                    remoteModified = new Date(0); // Very old date if no commits
+                }
+            } else {
+                remoteModified = new Date(0); // Fallback
+            }
+        } catch (error) {
+            remoteModified = new Date(0); // Fallback on error
+        }
+        
+        const localModified = localStats.mtime;
+        
+        console.log(`📅 Remote modified: ${remoteModified.toISOString()}`);
+        console.log(`📅 Local modified: ${localModified.toISOString()}`);
+        
+        // Compare content hashes to avoid unnecessary syncs
+        const remoteHash = getHash(remoteContent);
+        const localHash = getHash(localContent);
+        
+        if (remoteHash === localHash) {
+            console.log("✅ Local and remote databases are identical");
+            lastContentHash = localHash;
             return;
         }
         
-        const data = await response.json();
-        const remoteContent = Buffer.from(data.content, "base64").toString("utf-8");
-        const remoteHash = getHash(remoteContent);
-        
-        
-        if (remoteHash !== lastContentHash) {
-            console.log("🆕 Remote database has new changes, updating local copy...");
-            
+        // Determine which version is newer
+        if (remoteModified > localModified) {
+            // Remote is newer - pull from GitHub
+            console.log("⬇️ Remote database is newer, pulling from GitHub...");
             
             try {
                 JSON.parse(remoteContent);
@@ -88,16 +132,16 @@ async function checkForRemoteUpdates() {
                 return;
             }
             
-            
+            // Create backup
             const backupPath = LOCAL_DB_PATH + '.backup.' + Date.now();
             fs.copyFileSync(LOCAL_DB_PATH, backupPath);
             console.log(`📋 Created backup: ${path.basename(backupPath)}`);
             
-            
+            // Update local file
             fs.writeFileSync(LOCAL_DB_PATH, remoteContent);
             lastContentHash = remoteHash;
             
-            
+            // Reload json-server
             if (global.jsonServerRouter) {
                 global.jsonServerRouter.db.read();
                 console.log("🔄 Reloaded json-server database");
@@ -105,92 +149,64 @@ async function checkForRemoteUpdates() {
             
             console.log("✅ Local database updated from GitHub");
             
+        } else {
+            // Local is newer - push to GitHub
+            console.log("⬆️ Local database is newer, pushing to GitHub...");
             
             try {
-                const backupFiles = fs.readdirSync(__dirname)
-                    .filter(file => file.startsWith('db.json.backup.'))
-                    .sort()
-                    .reverse();
-                
-                if (backupFiles.length > 5) {
-                    for (let i = 5; i < backupFiles.length; i++) {
-                        fs.unlinkSync(path.join(__dirname, backupFiles[i]));
-                    }
-                }
-            } catch (cleanupError) {
-                console.log("⚠️ Could not clean up old backups:", cleanupError.message);
+                JSON.parse(localContent);
+            } catch (jsonError) {
+                console.error("❌ Local database has invalid JSON, skipping push:", jsonError.message);
+                return;
+            }
+            
+            const encodedContent = Buffer.from(localContent).toString("base64");
+            
+            const putResponse = await fetch(url, {
+                method: "PUT",
+                headers,
+                body: JSON.stringify({
+                    message: `Update db.json from Wall Market server - ${new Date().toISOString()}`,
+                    content: encodedContent,
+                    sha: remoteData.sha,
+                }),
+            });
+
+            if (!putResponse.ok) {
+                const errorText = await putResponse.text();
+                console.error("❌ Failed to update GitHub:", putResponse.status, putResponse.statusText, errorText);
+            } else {
+                lastContentHash = localHash;
+                console.log("✅ Local database pushed to GitHub");
             }
         }
-    } catch (error) {
-        console.log("⚠️ Error checking for remote updates:", error.message);
-    }
-}
-
-async function pushDbToGitHub(newContent) {
-    if (!GITHUB_ENABLED) return;
-
-    const newHash = getHash(newContent);
-    if (newHash === lastContentHash) {
-        console.log("⚠️ Skipped GitHub sync (no content change)");
-        return;
-    }
-
-    if (isGitHubSyncInProgress) {
-        pendingSyncs.push(newContent);
-        return;
-    }
-
-    isGitHubSyncInProgress = true;
-
-    try {
         
+        // Clean up old backups
         try {
-            JSON.parse(newContent);
-        } catch (jsonError) {
-            console.error("❌ Cannot sync invalid JSON to GitHub:", jsonError.message);
-            return;
+            const backupFiles = fs.readdirSync(__dirname)
+                .filter(file => file.startsWith('db.json.backup.'))
+                .sort()
+                .reverse();
+            
+            if (backupFiles.length > 5) {
+                for (let i = 5; i < backupFiles.length; i++) {
+                    fs.unlinkSync(path.join(__dirname, backupFiles[i]));
+                }
+            }
+        } catch (cleanupError) {
+            console.log("⚠️ Could not clean up old backups:", cleanupError.message);
         }
-
-        const url = "https://api.github.com/repos/" + GITHUB_OWNER + "/" + GITHUB_REPO + "/contents/" + GITHUB_FILE_PATH;
-        const getResponse = await fetch(url, { headers });
-        if (!getResponse.ok) {
-            console.error("❌ Could not fetch latest SHA from GitHub:", getResponse.status, getResponse.statusText);
-            return;
-        }
-
-        const data = await getResponse.json();
-        const latestSha = data.sha;
-        const encodedContent = Buffer.from(newContent).toString("base64");
-
-        const putResponse = await fetch(url, {
-            method: "PUT",
-            headers,
-            body: JSON.stringify({
-                message: "Update db.json via Wall Market server",
-                content: encodedContent,
-                sha: latestSha,
-            }),
-        });
-
-        if (!putResponse.ok) {
-            const errorText = await putResponse.text();
-            console.error("❌ Failed to update GitHub:", putResponse.status, putResponse.statusText, errorText);
-        } else {
-            lastContentHash = newHash;
-            console.log("✅ db.json pushed to GitHub");
-        }
-    } catch (err) {
-        console.error("❌ GitHub sync error:", err.message);
+        
+    } catch (error) {
+        console.log("⚠️ Error during GitHub sync:", error.message);
     } finally {
         isGitHubSyncInProgress = false;
+        
+        // Process any pending syncs
         if (pendingSyncs.length > 0) {
             const latestContent = pendingSyncs.pop();
-            pendingSyncs.length = 0;
-            setTimeout(() => {
-                if (!isGitHubSyncInProgress) {
-                    pushDbToGitHub(latestContent);
-                }
-            }, 1000);
+            pendingSyncs.length = 0; // Clear all pending
+            setTimeout(() => syncWithGitHub(), 1000); // Retry after 1 second
         }
     }
 }
@@ -260,50 +276,7 @@ async function initializeServer() {
         }
     }));
 
-    
-    let syncPending = false;
-    let syncTimer = null;
-
-    app.use((req, res, next) => {
-        res.on("finish", () => {
-            if (GITHUB_ENABLED && ["POST", "PUT", "PATCH", "DELETE"].includes(req.method) && req.url.startsWith('/api/')) {
-                
-                if (res.statusCode >= 200 && res.statusCode < 300) {
-                    syncPending = true;
-
-                    if (syncTimer) clearTimeout(syncTimer);
-
-                    syncTimer = setTimeout(async () => {
-                        try {
-                            if (syncPending && fs.existsSync(LOCAL_DB_PATH)) {
-                                const updatedContent = fs.readFileSync(LOCAL_DB_PATH, "utf-8");
-                                
-                                
-                                try {
-                                    JSON.parse(updatedContent);
-                                } catch (jsonError) {
-                                    console.error("❌ Invalid JSON in db.json, skipping GitHub sync:", jsonError.message);
-                                    syncPending = false;
-                                    return;
-                                }
-
-                                await pushDbToGitHub(updatedContent);
-                                syncPending = false;
-                                console.log("🕒 Synced db.json to GitHub after API changes");
-                            }
-                        } catch (err) {
-                            console.error("❌ Failed to sync to GitHub:", err.message);
-                            syncPending = false;
-                        }
-                    }, 5000); 
-                }
-            }
-        });
-
-        next();
-    });
-
-    
+    // Custom cart deletion middleware (bypass lodash-id issue)
     app.use('/api/carts', (req, res, next) => {
         if (req.method === 'DELETE') {
             const cartId = req.params.id || req.url.split('/').pop();
@@ -414,15 +387,13 @@ async function initializeServer() {
             console.log("⚠️ GitHub sync is DISABLED (GITHUB_SYNC=false)");
         } else {
             console.log("🔄 GitHub sync is ENABLED");
-            
-            
+            // Start periodic bidirectional sync every 30 seconds
             periodicSyncInterval = setInterval(async () => {
-                if (!isGitHubSyncInProgress) {
-                    await checkForRemoteUpdates();
-                }
+                await syncWithGitHub();
             }, SYNC_INTERVAL * 1000); 
             
-            console.log(`⏱️ Periodic GitHub sync check enabled (every ${SYNC_INTERVAL} seconds)`);
+            console.log(`⏱️ Periodic bidirectional GitHub sync enabled (every ${SYNC_INTERVAL} seconds)`);
+            console.log(`📋 Sync strategy: Compare timestamps, use most recent version`);
         }
     });
 }
