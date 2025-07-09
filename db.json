@@ -184,6 +184,29 @@
       "createdAt": "2025-07-04T10:46:14.774Z",
       "updatedAt": "2025-07-07T13:14:55.684Z",
       "deletedAt": null
+    },
+    {
+      "id": "prod_shiva_materia",
+      "name": "Shiva Materia",
+      "description": "Fantasy VII that allows for summoned monsters to be used in equipment and battle for various effects. Summon Materia typically has high stat penalties for equipping them, which they make up for with strong attacks and the ability to use or protect against various status effects and elements. Summon Materia is the only type of Materia that can never be bought. Shiva is the only Summon Materia the player obtains through storyline.",
+      "categoryId": 2,
+      "price": 9000,
+      "tags": [
+        "summoning",
+        "shiva",
+        "cryo",
+        "ice",
+        "elemental"
+      ],
+      "images": [
+        "assets/products/shivaMateria/main.webp",
+        "assets/products/shivaMateria/secondary.png",
+        "assets/products/shivaMateria/og.webp",
+        "assets/products/shivaMateria/details.webp"
+      ],
+      "createdAt": "2025-07-09T17:10:08.277Z",
+      "updatedAt": "2025-07-09T17:14:21.092Z",
+      "deletedAt": null
     }
   ],
   "carts": [
@@ -237,6 +260,23 @@
       "createdAt": "2025-07-08T09:07:27.064Z",
       "updatedAt": "2025-07-08T09:07:27.064Z",
       "expiresAt": "2025-07-15T09:07:27.064Z"
+    },
+    {
+      "id": "cart_FF7RMBUXXXX_1752080558346",
+      "userId": "FF7RMBUXXXX",
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "quantity": 2
+        },
+        {
+          "productId": "prod_transference_mdl",
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2025-07-09T17:02:38.346Z",
+      "updatedAt": "2025-07-09T17:17:38.735Z",
+      "expiresAt": "2025-07-16T17:02:38.347Z"
     }
   ],
   "orders": [

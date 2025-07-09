@@ -464,8 +464,9 @@ h2 {
 
 
 .main-image-container {
+    display: flex;
     position: relative;
-    width: 100%;
+    width: fit-content;
     min-width: 400px;
     min-height: 400px;
     margin-bottom: 1rem;
@@ -1441,13 +1442,6 @@ form {
     border-color: #ff6b35 #cc4400 #cc4400 #ff6b35;
 }
 
-.weapon-card:hover {
-    box-shadow: 
-        inset 1px 1px 0 #ff6b35,
-        inset -1px -1px 0 #cc4400,
-        2px 2px 4px var(--ff7-shadow),
-        0 0 15px rgba(255, 107, 53, 0.4);
-}
 
 .materia-card {
     border-color: var(--ff7-cursor-blue) #0040aa #0040aa var(--ff7-cursor-blue);

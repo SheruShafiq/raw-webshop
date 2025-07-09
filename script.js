@@ -45,6 +45,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  const homeLink = document.getElementById("home");
+    if (homeLink) {
+    homeLink.addEventListener("click", (e) => {
+      playFF7Sound("menu_select");
+      showPageTransition("Accessing Home...");
+      setTimeout(() => {
+         playFF7Sound("menu_select");
+      }, 500);
+    });
+  }
+
+
   if (
     currentPage.includes("product.html") ||
     currentPage.endsWith("/product.html")
@@ -220,8 +232,6 @@ function setupProductSearch(products) {
 
   searchInput.addEventListener("input", (e) => {
     clearTimeout(typingTimeout);
-    playFF7Sound("typing");
-
     const searchTerm = e.target.value.toLowerCase();
 
     if (searchTerm === "") {
@@ -1219,16 +1229,7 @@ function setupProductCardCarousels() {
     });
 
     
-    let autoAdvanceInterval = setInterval(nextImage, 4000);
 
-    
-    container.addEventListener('mouseenter', () => {
-      clearInterval(autoAdvanceInterval);
-    });
-
-    container.addEventListener('mouseleave', () => {
-      autoAdvanceInterval = setInterval(nextImage, 4000);
-    });
   });
 }
 
