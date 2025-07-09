@@ -426,14 +426,6 @@ async function loadUserProfile() {
                 <div class="profile-field">
                     <strong>Member Since:</strong> ${new Date(window.currentUser.createdAt).toLocaleDateString()}
                 </div>
-                ${profile ? `
-                    <div class="profile-field">
-                        <strong>Phone:</strong> ${profile.phone || 'Not provided'}
-                    </div>
-                    <div class="profile-field">
-                        <strong>Date of Birth:</strong> ${profile.dateOfBirth ? new Date(profile.dateOfBirth).toLocaleDateString() : 'Not provided'}
-                    </div>
-                ` : ''}
             </div>
             ${ordersHtml}
         `;

@@ -180,7 +180,24 @@ main {
     max-width: 1200px;
     margin: 0 auto;
 }
-
+#products-tab{
+        width: 110px;
+}
+#categories-tab{
+        width: 130px;
+}
+#users-tab{
+        width: 80px;
+}
+#home-tab{
+        width: 70px;
+}
+#cart-link{
+        width: 100px;
+}
+#orders-tab{
+        width: 90px;
+}
 h2 {
     color: var(--ff7-text-yellow);
     text-shadow: 1px 1px 0 var(--ff7-shadow);
@@ -484,6 +501,12 @@ h2 {
     max-height: 400px;
 }
 
+.nav-link, .auth-link{
+        display: flex;
+    justify-content: flex-end;
+    color: #fff;
+    text-decoration: none;
+}
 
 .image-nav-btn {
     position: absolute;
@@ -770,6 +793,7 @@ h2 {
 
 
 .admin-tab {
+
     border-bottom: 2px solid transparent;
     padding: 0.5rem 1rem;
     background: var(--ff7-window-bg);
@@ -1490,13 +1514,14 @@ form {
     background: var(--ff7-selected-bg);
     color: var(--ff7-text-yellow);
     border-radius: 50%;
-    padding: 0.1rem 0.4rem;
+    padding: 0.2rem 0.5rem;
     font-size: 0.7rem;
     font-weight: bold;
     margin-left: 0.5rem;
     border: 1px solid var(--ff7-window-border-light);
     text-shadow: 0 0 3px var(--ff7-text-yellow);
     animation: ff7-gil-sparkle 2s infinite;
+    align-content: center;
 }
 
 

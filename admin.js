@@ -44,9 +44,6 @@ function switchTab(tabId) {
 
 function setupModalHandlers() {
     
-    const productModal = document.getElementById('product-modal');
-    const categoryModal = document.getElementById('category-modal');
-    
     
     document.getElementById('add-product-btn').addEventListener('click', () => {
         openProductModal();
