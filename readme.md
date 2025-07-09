@@ -15,7 +15,7 @@ Except the following regions:
     1) View products
     2) Add products to cart
     3) Purchase products
-    4) Track purchases and view old purchases
+    4) Track and view old purchases
 - An (admin) user can
     1) Add, remove, delete products
     2) Add, remove, delete categories
@@ -37,15 +37,16 @@ Except the following regions:
 - JavaScript
 - JSON-Server
 - Render
-- A custom GitHub Sync script (a very own little app of mine)
 
 
 ## Usage:
 - Prod: https://wall-market-online.onrender.com/
-- Dev: `npm run dev` 
+- Dev: 
+    1) `npm install` (to install dependencies)
+    2) `npm run dev` (to start the development server)
+    3) `http://localhost:3000/` (to view the app in your browser)
 
-
-## TODO:
-- Add one more product and maybe better images for pre existing products
-
+- Admin login:
+    1) Username: `jenova@ff7.com`
+    2) Password: `CETRAA`
 
