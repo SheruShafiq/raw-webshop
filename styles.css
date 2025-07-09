@@ -662,6 +662,8 @@ h2 {
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 2px solid var(--ff7-border);
+        margin-bottom: 1rem;
+    margin-right: 1rem;
 }
 
 .cart-summary p {

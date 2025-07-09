@@ -267,7 +267,7 @@
       "items": [
         {
           "productId": "prod_buster_sword",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "productId": "prod_transference_mdl",
@@ -275,7 +275,7 @@
         }
       ],
       "createdAt": "2025-07-09T17:02:38.346Z",
-      "updatedAt": "2025-07-09T17:17:38.735Z",
+      "updatedAt": "2025-07-09T19:12:15.513Z",
       "expiresAt": "2025-07-16T17:02:38.347Z"
     }
   ],
