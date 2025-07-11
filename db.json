@@ -70,6 +70,16 @@
       "password": "testpass123",
       "roleId": 1,
       "id": "FF1xioO"
+    },
+    {
+      "id": "USER_1752221620805",
+      "displayName": "Tim ",
+      "email": "timvangemert@outlook.com",
+      "password": "123456",
+      "roleId": 1,
+      "createdAt": "2025-07-11T08:13:40.805Z",
+      "updatedAt": "2025-07-11T08:13:40.805Z",
+      "deletedAt": null
     }
   ],
   "userProfiles": [
