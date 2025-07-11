@@ -287,6 +287,35 @@
       "createdAt": "2025-07-09T17:02:38.346Z",
       "updatedAt": "2025-07-09T19:12:15.513Z",
       "expiresAt": "2025-07-16T17:02:38.347Z"
+    },
+    {
+      "id": "cart_USER_1752221620805_1752221641521",
+      "userId": "USER_1752221620805",
+      "items": [
+        {
+          "productId": "prod_buster_sword",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_fire_materia",
+          "quantity": 3
+        },
+        {
+          "productId": "prod_potion",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_transference_mdl",
+          "quantity": 1
+        },
+        {
+          "productId": "prod_shiva_materia",
+          "quantity": 1
+        }
+      ],
+      "createdAt": "2025-07-11T08:14:01.521Z",
+      "updatedAt": "2025-07-11T08:14:09.044Z",
+      "expiresAt": "2025-07-18T08:14:01.521Z"
     }
   ],
   "orders": [
