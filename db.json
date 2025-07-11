@@ -298,11 +298,11 @@
         },
         {
           "productId": "prod_fire_materia",
-          "quantity": 3
+          "quantity": 4
         },
         {
           "productId": "prod_potion",
-          "quantity": 1
+          "quantity": 2
         },
         {
           "productId": "prod_transference_mdl",
@@ -314,7 +314,7 @@
         }
       ],
       "createdAt": "2025-07-11T08:14:01.521Z",
-      "updatedAt": "2025-07-11T08:14:09.044Z",
+      "updatedAt": "2025-07-11T08:14:30.828Z",
       "expiresAt": "2025-07-18T08:14:01.521Z"
     }
   ],
